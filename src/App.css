@@ -1,28 +1,44 @@
-.App {
+body {
+  font-family: 'Droid Serif', serif;
+}
+img {
+  height: 200px;
+  width: auto;
+  margin: 0 auto;
+  display: block;
+  padding-top: 8px;
+}
+
+ul.product-list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+li.product-item {
+  border: 1px solid black;
+  float: left;
+  /* width: 28.3333%; */
+  /* max-width: 350px; */
+  width: 365px;
+	height: auto;
+	margin: 2.5%;
+}
+
+/* ul.product-list li:nth-child(2n+1) {
+  clear: left;
+} */
+
+.product-name, .product-price {
   text-align: center;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+.orders-list {
+  clear: left;
 }
 
-.App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
-  color: white;
-}
-
-.App-title {
-  font-size: 1.5em;
-}
-
-.App-intro {
-  font-size: large;
-}
-
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+.add-button {
+  float: right;
+  margin-bottom: 8px;
+  margin-right: 8px;
 }
