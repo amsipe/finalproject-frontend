@@ -20,7 +20,7 @@ header {
 /* Main Nav */
 ul.main-nav {
   padding-left: 30px;
-  background-color: #222;
+  background-color: rgb(34,34,34);
 }
 .main-nav li {
   display: inline-block;
@@ -34,12 +34,46 @@ ul.main-nav {
   text-align: center;
   text-decoration: none;
   padding: 8px 10px;
+
 }
 
 .main-nav .active {
-  background-color: blue;
+  background-color: rgba(255,255,255,0.2);
 }
 /* End --- Main Nav */
+
+/* Cart */
+
+.cart {
+  float: right;
+  margin-right: 50px;
+  /* padding: 15px 20px; */
+  border: 1px solid black;
+  background-image: url('./icons/shoppingcart.png');
+  background-repeat: no-repeat;
+  background-size: 40px 40px;
+  background-position: center;
+  color: tomato;
+  position: relative;
+  height: 40px;
+  width: 40px;
+  
+  
+
+}
+
+.cart span {
+  color: tomato;
+  font-size: 1.5em;
+  line-height: 1em;
+  font-weight: bold;
+  position: absolute;
+  top: 100;
+  right: 0;
+  bottom: 0;
+  left: 100;
+}
+/* End Cart */
 ul.product-list {
   list-style-type: none;
   margin: 0;

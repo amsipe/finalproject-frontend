@@ -22,7 +22,6 @@ class Products extends Component {
     }
     componentWillMount(){
       this.getProducts();
-      this.getOrders();
     }
     getProducts(){
       var url = 'http://localhost:5000/products'
@@ -39,19 +38,19 @@ class Products extends Component {
         });
     }
   
-    getOrders(){
-      var url = 'http://localhost:5000/orders';
-      request.get(url)
-      .set('accept','json')
-      .end((err,res) => {
-        if(err){
-          throw Error(err);
-        }
-        this.setState({
-          orders: JSON.parse(res.text)
-        });
-      });
-    }
+    // getOrders(){
+    //   var url = 'http://localhost:5000/orders';
+    //   request.get(url)
+    //   .set('accept','json')
+    //   .end((err,res) => {
+    //     if(err){
+    //       throw Error(err);
+    //     }
+    //     this.setState({
+    //       orders: JSON.parse(res.text)
+    //     });
+    //   });
+    // }
   
     handleOrderSubmit(){
       //TODO: replace send object with cart state
@@ -109,15 +108,15 @@ class Products extends Component {
   
       //TODO: replace orders with a seperate page and component
   
-      var orders = _.map(this.state.orders,(order,index) => {
-        return <li key={index} >{order.OrderID}</li>
-      })
+      // var orders = _.map(this.state.orders,(order,index) => {
+      //   return <li key={index} >{order.OrderID}</li>
+      // })
   
-      var cartItems = this.state.cart.length;
+      console.log(this.state.cart);
+      var cartItems = this.state.cart.items.length;
       return (
         <div>
-          <p>{cartItems}</p>
-          <input type="text" name="newOrder"/>
+          <div className="cart"><span>{cartItems}</span></div>
           <button onClick={() => {this.handleOrderSubmit()}}>Submit Order</button>
           <input type="text" name="deleteOrder"/>
           <button onClick={() => {this.handleOrderDelete()}}>Delete</button>
@@ -130,7 +129,7 @@ class Products extends Component {
                />
             )
           })}</ul>
-          <ul className="orders-list">{orders}</ul>
+          
         </div>
       );
     }
