@@ -1,0 +1,75 @@
+body {
+  font-family: 'Droid Serif', serif;
+}
+img {
+  height: 200px;
+  width: auto;
+  margin: 0 auto;
+  display: block;
+  padding-top: 8px;
+}
+ul {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+header {
+  margin-bottom: 20px;
+}
+/* Main Nav */
+ul.main-nav {
+  padding-left: 30px;
+  background-color: #222;
+}
+.main-nav li {
+  display: inline-block;
+  margin: 0;
+  
+}
+
+.main-nav a {
+  display: block;
+  color: #edec51;
+  text-align: center;
+  text-decoration: none;
+  padding: 8px 10px;
+}
+
+.main-nav .active {
+  background-color: blue;
+}
+/* End --- Main Nav */
+ul.product-list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+li.product-item {
+  border: 1px solid black;
+  float: left;
+  /* width: 28.3333%; */
+  /* max-width: 350px; */
+  width: 365px;
+	height: auto;
+	margin: 2.5%;
+}
+
+/* ul.product-list li:nth-child(2n+1) {
+  clear: left;
+} */
+
+.product-name, .product-price {
+  text-align: center;
+}
+
+.orders-list {
+  clear: left;
+}
+
+.add-button {
+  float: right;
+  margin-bottom: 8px;
+  margin-right: 8px;
+}
