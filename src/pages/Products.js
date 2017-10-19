@@ -68,7 +68,14 @@ class Products extends Component {
           if(err){
             throw Error(err);
           }
-          this.getOrders();
+          //this.getOrders();
+          this.setState({
+            cart: {
+              total: 0,
+              customerID: null,
+              items: []
+            }
+          })
         })
     }
   
@@ -118,8 +125,7 @@ class Products extends Component {
         <div>
           <div className="cart"><span>{cartItems}</span></div>
           <button onClick={() => {this.handleOrderSubmit()}}>Submit Order</button>
-          <input type="text" name="deleteOrder"/>
-          <button onClick={() => {this.handleOrderDelete()}}>Delete</button>
+
           <ul className="product-list">{this.state.products.map((product,index) => {
             return (
             <Product 
