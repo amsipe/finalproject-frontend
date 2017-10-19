@@ -8,8 +8,11 @@ class Home extends Component {
         super(props);
     }
     render() {
+        
         return (
-            <div>This is the main page.</div>
+            <div>
+                {this.props.children}
+                This is the main page.</div>
         )
     }
 }
