@@ -24,6 +24,7 @@ class App extends Component {
     }
     this.getProducts = this.getProducts.bind(this);
     this.handleCartAdd = this.handleCartAdd.bind(this);
+    this.handleOrderSubmit = this.handleOrderSubmit.bind(this);
 
    
   }
@@ -73,7 +74,7 @@ class App extends Component {
       })
   }
 
-  handleCartAdd(product,count = 1){
+  handleCartAdd(product,count = 2){
     console.log(product);
     var cartCopy = _.cloneDeep(this.state.cart);
     var newItem = [product.ProductID,count,product.Price];
@@ -96,9 +97,14 @@ class App extends Component {
    return (
      <BrowserRouter>
       <div>
-        <Nav/>
+        <Nav cart={this.state.cart}/>
         <Route exact path="/" component={Home}/>
-        <Route path="/products" component={Products}/>
+        <Route path="/products" render={() => <Products 
+        products={this.state.products} 
+        cart={this.state.cart}
+        addCart={this.handleCartAdd}
+        orderSubmit={this.handleOrderSubmit}
+        />}/>
         <Route path="/orders" component={Orders}/>
       </div>
      </BrowserRouter>

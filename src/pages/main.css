@@ -21,7 +21,9 @@ header {
 ul.main-nav {
   padding-left: 30px;
   background-color: rgb(34,34,34);
+
 }
+
 .main-nav li {
   display: inline-block;
   margin: 0;
@@ -40,14 +42,19 @@ ul.main-nav {
 .main-nav .active {
   background-color: rgba(255,255,255,0.2);
 }
+
+.cart {
+  float: right;
+  /* color: #edec51; */
+}
 /* End --- Main Nav */
 
 /* Cart */
 
-.cart {
+/* .cart {
   float: right;
   margin-right: 50px;
-  /* padding: 15px 20px; */
+
   border: 1px solid black;
   background-image: url('./icons/shoppingcart.png');
   background-repeat: no-repeat;
@@ -72,7 +79,7 @@ ul.main-nav {
   right: 0;
   bottom: 0;
   left: 100;
-}
+} */
 /* End Cart */
 ul.product-list {
   list-style-type: none;
@@ -112,3 +119,35 @@ li.product-item {
   border-radius: 5px;
   cursor: pointer;
 }
+
+/* Orders Page */
+
+.orderResults {
+  width: 400px;
+  height: 400px;
+  margin: 0 auto;
+  border: 1px solid black;
+}
+
+.orderResults table {
+  border: none;
+  
+  padding: 5px;
+}
+.orderResults th,tr,td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+
+
+.orderResults table {
+  margin: 10px 10px;
+  width: auto;
+  display: block;
+}
+
+.orderResults td {
+  text-align: center;
+}
+/* End Orders Page */

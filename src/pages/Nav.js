@@ -14,6 +14,7 @@ class Nav extends Component {
                     <li><NavLink to="/products">PRODUCTS</NavLink></li>
                     <li><NavLink to="/orders">ORDERS</NavLink></li>
                 </ul>
+                <span className="cart">{this.props.cart.items.length}</span>
             </header>
         )
     }

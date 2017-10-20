@@ -8,7 +8,8 @@ class Orders extends Component {
         super(props);
         this.state = {
             orders: [],
-            search: null
+            search: null,
+            results: null
         }
     }
     componentWillMount(){
@@ -49,22 +50,68 @@ class Orders extends Component {
         })
     }
 
-    handleOrderSearch(){
-        console.log('hotdog');
+    handleOrderSearch(e){
+        e.preventDefault();
+        console.log(e);
+        var url = 'http://localhost:5000/orders/' + this.state.search;
+        request.get(url)
+        .set('accept','json')
+        .end((err,res) => {
+          if(err){
+            throw Error(err);
+          }
+          this.setState({
+            results: JSON.parse(res.text)
+          });
+        });
     }
 
     render() {
-        var orders = _.map(this.state.orders,(order,index) => {
+        const orders = _.map(this.state.orders,(order,index) => {
             
             return <li key={index} >Order Number: {order.OrderID}, Order Total: ${order.OrderTotal}, Order Completed: {order.Completed}</li>
-          })
+        })
+        const results = _.map(this.state.results,(result,index) => {
+            let total = result.Price * result.Quantity
+            return (
+                    <tr key={index}>
+                        <td>{result.OrderID}</td>
+                        <td>{result.Name}</td>
+                        <td>{result.Quantity}</td>
+                        <td>${total.toFixed(2)}</td>
+                        <td><button>Remove</button></td>
+
+                    </tr>    
+            )
+        })
         return (
+            
             <div>This is orders page
                 <form >
-                    <input type="text" name="deleteOrder" onChange={this.handleSearchChange.bind(this)}/>
-                    <button onClick={this.handleOrderDelete.bind(this)}>Delete</button>
+                    <input type="text" name="searchOrder" onChange={this.handleSearchChange.bind(this)}/>
                     <button onClick={this.handleOrderSearch.bind(this)}>Search</button>
+                    <button onClick={this.handleOrderDelete.bind(this)}>Delete</button>
                 </form>
+                {(!this.state.results) ? null : 
+                <div className="orderResults">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>OrderID</th>
+                                <th>Product Name</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {results}
+                        </tbody>
+                    </table>     
+                    <button>Update Order</button>
+                    <button>Cancel Order</button>   
+                </div>   
+                } 
                 <ul className="orders-list">{orders}</ul>
             </div>
 
