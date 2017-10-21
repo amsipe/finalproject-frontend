@@ -1,25 +1,14 @@
 import React, { Component } from 'react';
-import request from 'superagent';
-import _ from 'lodash';
+// import request from 'superagent';
+// import _ from 'lodash';
 import './main.css';
 
+import Quantity from './Quantity';
+
 class Products extends Component {
-    constructor(props){
-      super(props);
-      // this.state = {
-      //   products: [],
-      //   orders: [],
-      //   cart: {
-      //     total: 0,
-      //     customerID: null,
-      //     items: []
-      //   }
-        
-      // }
-      // this.getProducts = this.getProducts.bind(this);
-      // this.handleCartAdd = this.handleCartAdd.bind(this);
-     
-    }
+    // constructor(props){
+    //   super(props);
+    // }
     // componentWillMount(){
     //   this.getProducts();
     // }
@@ -120,7 +109,7 @@ class Products extends Component {
       // })
   
       console.log(this.props);
-      var cartItems = this.props.cart.items.length;
+      // var cartItems = this.props.cart.items.length;
       return (
         <div>
           <button onClick={() => {this.props.orderSubmit()}}>Submit Order</button>
@@ -130,6 +119,7 @@ class Products extends Component {
               key={index} 
               product={product}
               onCartAdd={this.props.addCart}
+              onChangeQuantity={this.props.onChangeQuantity}
                />
             )
           })}</ul>
@@ -140,9 +130,9 @@ class Products extends Component {
   }
   
   class Product extends Component {
-    constructor(props){
-      super(props);
-    }
+    // constructor(props){
+    //   super(props);
+    // }
   
     render(){
   
@@ -151,6 +141,7 @@ class Products extends Component {
         <img src={"/img/" + this.props.product.ImgURL} alt={this.props.product.Name}/>
         <div className="product-name">{this.props.product.Name}</div>
         <div className="product-price">$ {this.props.product.Price}</div>
+        <Quantity select={1} count={10} onChangeQuantity={this.props.onChangeQuantity}/>
         <button className="add-button" onClick={() => {this.props.onCartAdd(this.props.product)}}>Add to Cart</button>
        </li>
       );

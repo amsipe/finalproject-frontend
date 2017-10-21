@@ -3,9 +3,9 @@ import {NavLink} from 'react-router-dom';
 import './main.css';
 
 class Nav extends Component {
-    constructor(props){
-        super(props);
-    }
+    // constructor(props){
+    //     super(props);
+    // }
     render() {
         return (
             <header>

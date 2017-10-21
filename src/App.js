@@ -25,6 +25,7 @@ class App extends Component {
     this.getProducts = this.getProducts.bind(this);
     this.handleCartAdd = this.handleCartAdd.bind(this);
     this.handleOrderSubmit = this.handleOrderSubmit.bind(this);
+    this.handleQuantityChange = this.handleQuantityChange.bind(this);
 
    
   }
@@ -75,10 +76,8 @@ class App extends Component {
   }
 
   handleCartAdd(product,count = 2){
-    console.log(product);
     var cartCopy = _.cloneDeep(this.state.cart);
     var newItem = [product.ProductID,count,product.Price];
-    console.log(newItem);
     cartCopy.items.push(newItem);
     //TODO: replace random number for customerID with better process
     //random number is assigned to customer if not assigned 
@@ -92,8 +91,12 @@ class App extends Component {
 
   }
 
+  handleQuantityChange(e){
+    console.log('hotdog',e.target.value)
+  }
+
   render () {
-    console.log(this.state);
+    
    return (
      <BrowserRouter>
       <div>
@@ -104,6 +107,7 @@ class App extends Component {
         cart={this.state.cart}
         addCart={this.handleCartAdd}
         orderSubmit={this.handleOrderSubmit}
+        onChangeQuantity={this.handleQuantityChange}
         />}/>
         <Route path="/orders" component={Orders}/>
       </div>

@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-import request from 'superagent';
-import _ from 'lodash';
+// import request from 'superagent';
+// import _ from 'lodash';
 import './main.css';
 
 class Home extends Component {
-    constructor(props){
-        super(props);
-    }
+    // constructor(props){
+    //     super(props);
+    // }
     render() {
-        
+
         return (
             <div>
                 {this.props.children}
