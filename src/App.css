@@ -1,4 +1,4 @@
-body {
+/* body {
   font-family: 'Droid Serif', serif;
 }
 img {
@@ -18,16 +18,12 @@ ul.product-list {
 li.product-item {
   border: 1px solid black;
   float: left;
-  /* width: 28.3333%; */
-  /* max-width: 350px; */
   width: 365px;
 	height: auto;
 	margin: 2.5%;
 }
 
-/* ul.product-list li:nth-child(2n+1) {
-  clear: left;
-} */
+
 
 .product-name, .product-price {
   text-align: center;
@@ -41,4 +37,4 @@ li.product-item {
   float: right;
   margin-bottom: 8px;
   margin-right: 8px;
-}
+} */

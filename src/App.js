@@ -1,7 +1,13 @@
 import React, { Component } from 'react';
 import request from 'superagent';
 import _ from 'lodash';
-import './App.css';
+// import './App.css';
+import {BrowserRouter, Route} from 'react-router-dom'
+
+import Products from './pages/Products';
+import Orders from './pages/Orders';
+import Nav from './pages/Nav';
+import Home from './pages/Home';
 
 class App extends Component {
   constructor(props){
@@ -18,12 +24,15 @@ class App extends Component {
     }
     this.getProducts = this.getProducts.bind(this);
     this.handleCartAdd = this.handleCartAdd.bind(this);
+    this.handleOrderSubmit = this.handleOrderSubmit.bind(this);
+    this.handleQuantityChange = this.handleQuantityChange.bind(this);
+
    
   }
+
   componentWillMount(){
     this.getProducts();
-    this.getOrders();
-  }
+  }  
   getProducts(){
     var url = 'http://localhost:5000/products'
     request.get(url)
@@ -32,25 +41,16 @@ class App extends Component {
         if(err){
           throw Error(err);
         }
-        
+        console.log(JSON.parse(res.text));
+        var products = _.map(JSON.parse(res.text),(product) => {
+          product.Quantity = 1;
+          return product;
+        });
+        console.log(products);
         this.setState({
-          products: JSON.parse(res.text)
+          products
         });
       });
-  }
-
-  getOrders(){
-    var url = 'http://localhost:5000/orders';
-    request.get(url)
-    .set('accept','json')
-    .end((err,res) => {
-      if(err){
-        throw Error(err);
-      }
-      this.setState({
-        orders: JSON.parse(res.text)
-      });
-    });
   }
 
   handleOrderSubmit(){
@@ -69,88 +69,68 @@ class App extends Component {
         if(err){
           throw Error(err);
         }
-        this.getOrders();
+        
+        this.setState({
+          cart: {
+            total: 0,
+            customerID: null,
+            items: []
+          }
+        })
+        this.getProducts();
+
       })
   }
 
-  handleOrderDelete(){
-      
-      var stateCopy = _.map(this.state.orders,_.cloneDeep);
-      var url = 'http://localhost:5000/orders/' + stateCopy[0].OrderID;
-      request
-        .del(url)
-        .set('accept','json')
-        .end((err,res) => {
-          if(err){
-            throw Error(err);
-          }
-          this.getOrders();
-        })
-  }
-
-  handleCartAdd(product,count = 1){
-    console.log(product);
+  handleCartAdd(product,count = 2){
     var cartCopy = _.cloneDeep(this.state.cart);
-    var newItem = [product.ProductID,count,product.Price];
-    console.log(newItem);
-    cartCopy.items.push(newItem);
+    cartCopy.items.push(product);
     //TODO: replace random number for customerID with better process
     //random number is assigned to customer if not assigned 
     cartCopy.customerID = (!cartCopy.customerID) ? _.random(1,10) : cartCopy.customerID;
     cartCopy.total = _.sumBy(cartCopy.items, (item) => {
-      return item[2];
+      return item.Quantity * item.Price;
     })
     this.setState({
       cart: cartCopy
     })
 
   }
-  render() {
 
-    //TODO: replace orders with a seperate page and component
-
-    var orders = _.map(this.state.orders,(order,index) => {
-      return <li key={index} >{order.OrderID}</li>
+  handleQuantityChange(e,productIndex){
+    e.preventDefault();
+    console.log(e.target.value,productIndex);
+    var productsCopy = _.cloneDeep(this.state.products);
+    productsCopy = _.map(productsCopy,(product,index) => {
+        if(index === productIndex){
+            product.Quantity = parseInt(e.target.value,10);
+            return product;       
+        }
+        return product;
     })
+    this.setState({
+      products: productsCopy
+    })
+  }
 
-    var cartItems = this.state.cart.length;
-    return (
+  render () {
+    
+   return (
+     <BrowserRouter>
       <div>
-        <p>{cartItems}</p>
-        <input type="text" name="newOrder"/>
-        <button onClick={() => {this.handleOrderSubmit()}}>Submit Order</button>
-        <input type="text" name="deleteOrder"/>
-        <button onClick={() => {this.handleOrderDelete()}}>Delete</button>
-        <ul className="product-list">{this.state.products.map((product,index) => {
-          return (
-          <Product 
-            key={index} 
-            product={product}
-            onCartAdd={this.handleCartAdd}
-             />
-          )
-        })}</ul>
-        <ul className="orders-list">{orders}</ul>
+        <Nav cart={this.state.cart}/>
+        <Route exact path="/" component={Home}/>
+        <Route path="/products" render={() => <Products 
+        products={this.state.products} 
+        cart={this.state.cart}
+        addCart={this.handleCartAdd}
+        orderSubmit={this.handleOrderSubmit}
+        onChangeQuantity={this.handleQuantityChange}
+        />}/>
+        <Route path="/orders" component={Orders}/>
       </div>
-    );
-  }
-}
-
-class Product extends Component {
-  constructor(props){
-    super(props);
-  }
-
-  render(){
-
-    return (
-      <li className="product-item">
-      <img src={"/img/" + this.props.product.ImgURL} alt={this.props.product.Name}/>
-      <div className="product-name">{this.props.product.Name}</div>
-      <div className="product-price">$ {this.props.product.Price}</div>
-      <button className="add-button" onClick={() => {this.props.onCartAdd(this.props.product)}}>Add to Cart</button>
-     </li>
-    );
+     </BrowserRouter>
+   )
   }
 }
 
