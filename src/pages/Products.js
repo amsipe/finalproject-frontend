@@ -1,118 +1,44 @@
 import React, { Component } from 'react';
 // import request from 'superagent';
-// import _ from 'lodash';
+import _ from 'lodash';
 import './main.css';
 
 import Quantity from './Quantity';
 
 class Products extends Component {
-    // constructor(props){
-    //   super(props);
-    // }
-    // componentWillMount(){
-    //   this.getProducts();
-    // }
-    // getProducts(){
-    //   var url = 'http://localhost:5000/products'
-    //   request.get(url)
-    //     .set('accept','json')
-    //     .end((err,res) => {
-    //       if(err){
-    //         throw Error(err);
-    //       }
-          
-    //       this.setState({
-    //         products: JSON.parse(res.text)
-    //       });
-    //     });
-    // }
-  
-    // getOrders(){
-    //   var url = 'http://localhost:5000/orders';
-    //   request.get(url)
-    //   .set('accept','json')
-    //   .end((err,res) => {
-    //     if(err){
-    //       throw Error(err);
-    //     }
-    //     this.setState({
-    //       orders: JSON.parse(res.text)
-    //     });
-    //   });
-    // }
-  
-    // handleOrderSubmit(){
-    //   //TODO: replace send object with cart state
-    //   var cartCopy = _.cloneDeep(this.state.cart);
-    //   var url = 'http://localhost:5000/orders';
-    //   request
-    //     .post(url)
-    //     .send({
-    //       total: cartCopy.total,
-    //       customer: cartCopy.customerID,
-    //       items: cartCopy.items
-    //      })
-    //     .set('accept','json')
-    //     .end((err,res) => {
-    //       if(err){
-    //         throw Error(err);
-    //       }
-    //       //this.getOrders();
-    //       this.setState({
-    //         cart: {
-    //           total: 0,
-    //           customerID: null,
-    //           items: []
-    //         }
-    //       })
-    //     })
-    // }
-  
-    // handleOrderDelete(){
-        
-    //     var stateCopy = _.map(this.state.orders,_.cloneDeep);
-    //     var url = 'http://localhost:5000/orders/' + stateCopy[0].OrderID;
-    //     request
-    //       .del(url)
-    //       .set('accept','json')
-    //       .end((err,res) => {
-    //         if(err){
-    //           throw Error(err);
-    //         }
-    //         this.getOrders();
-    //       })
-    // }
-  
-    // handleCartAdd(product,count = 1){
-    //   console.log(product);
-    //   var cartCopy = _.cloneDeep(this.state.cart);
-    //   var newItem = [product.ProductID,count,product.Price];
-    //   console.log(newItem);
-    //   cartCopy.items.push(newItem);
-    //   //TODO: replace random number for customerID with better process
-    //   //random number is assigned to customer if not assigned 
-    //   cartCopy.customerID = (!cartCopy.customerID) ? _.random(1,10) : cartCopy.customerID;
-    //   cartCopy.total = _.sumBy(cartCopy.items, (item) => {
-    //     return item[2];
-    //   })
-    //   this.setState({
-    //     cart: cartCopy
-    //   })
-  
-    // }
+
     render() {
   
-      //TODO: replace orders with a seperate page and component
-  
-      // var orders = _.map(this.state.orders,(order,index) => {
-      //   return <li key={index} >{order.OrderID}</li>
-      // })
-  
-      console.log(this.props);
-      // var cartItems = this.props.cart.items.length;
+      //TODO: move form element to own component
+      const categories = _.map(this.props.categories,(category,index) => {
+        return (
+          <option key={index} value={category.CategoryID}>{_.capitalize(category.Category)}</option>
+        )
+      })
+      //TODO: fix not having placeholder in select dropdown
       return (
         <div>
           <button onClick={() => {this.props.orderSubmit()}}>Submit Order</button>
+          
+          <form onSubmit={this.props.onNewProductSubmit} onChange={this.props.onChangeNewProduct}>
+            <p>Please enter product details:</p>
+            <label htmlFor="productName">Name</label>
+            <input type="text" name="productName" value={this.props.productForm.productName} />
+            <label htmlFor="imgUrl">Image Name</label>
+            <input type="text" name="imgUrl" value={this.props.productForm.imgUrl}/>
+            <label htmlFor="price">Price</label>
+            <input type="text" name="price" value={this.props.productForm.price}/>
+            <label htmlFor="categoryId">Category</label>
+            <select name="categoryId" defaultValue={this.props.productForm.categoryId} onChange={this.props.onChangeNewProduct}>
+            {this.props.productForm.categoryId}
+             {categories}
+            
+            </select>  
+            <label htmlFor="description">Description</label>
+            <textarea type="text" name="description"  value={this.props.productForm.description}/>
+            
+            <button>Add Product</button>
+          </form>  
           <ul className="product-list">{this.props.products.map((product,index) => {
             return (
             <Product 

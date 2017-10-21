@@ -19,20 +19,47 @@ class App extends Component {
         total: 0,
         customerID: null,
         items: []
-      }
+      },
+      newProduct: {
+        productName: '',
+        imgUrl: '',
+        price: '',
+        description: '',
+        categoryId: 'Select...'
+      },
+      categories: []
       
     }
     this.getProducts = this.getProducts.bind(this);
     this.handleCartAdd = this.handleCartAdd.bind(this);
     this.handleOrderSubmit = this.handleOrderSubmit.bind(this);
     this.handleQuantityChange = this.handleQuantityChange.bind(this);
+    this.handleNewProductChange = this.handleNewProductChange.bind(this);
+    this.handleNewProductSubmit = this.handleNewProductSubmit.bind(this);
 
    
   }
 
   componentWillMount(){
     this.getProducts();
+    this.getCategories();
   }  
+
+  getCategories(){
+    var url = 'http://localhost:5000/categories'
+    request.get(url)
+      .set('accept','json')
+      .end((err,res) => {
+        if(err){
+          throw Error(err);
+        }
+        console.log(JSON.parse(res.text));
+
+        this.setState({
+          categories: JSON.parse(res.text)
+        });
+      });
+  }
   getProducts(){
     var url = 'http://localhost:5000/products'
     request.get(url)
@@ -113,6 +140,35 @@ class App extends Component {
     })
   }
 
+  handleNewProductChange(e){
+    e.preventDefault();
+    console.log(e.target.value);
+    const newProduct = _.cloneDeep(this.state.newProduct);
+    console.log(newProduct);
+    newProduct[e.target.name] = e.target.value;
+    console.log(newProduct)
+    this.setState({
+      newProduct
+    })
+  }
+
+  handleNewProductSubmit(e){
+    e.preventDefault();
+    console.log(e);
+    var newProductCopy = _.cloneDeep(this.state.newProduct);
+    var url = 'http://localhost:5000/products';
+    request
+      .post(url)
+      .send(newProductCopy)
+      .set('accept','json')
+      .end((err,res) => {
+        if(err){
+          throw Error(err);
+        }
+        console.log('hotdog');
+      })
+  }
+
   render () {
     
    return (
@@ -126,6 +182,10 @@ class App extends Component {
         addCart={this.handleCartAdd}
         orderSubmit={this.handleOrderSubmit}
         onChangeQuantity={this.handleQuantityChange}
+        onChangeNewProduct={this.handleNewProductChange}
+        categories={this.state.categories}
+        productForm={this.state.newProduct}
+        onNewProductSubmit={this.handleNewProductSubmit}
         />}/>
         <Route path="/orders" component={Orders}/>
       </div>
