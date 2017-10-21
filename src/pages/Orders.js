@@ -64,7 +64,7 @@ class Orders extends Component {
 
     handleSearchChange(e){
         this.setState({
-            search: e.target.value
+            search: parseInt(e.target.value,10)
         })
     }
 
@@ -105,16 +105,18 @@ class Orders extends Component {
     }
 
     handleOrderUpdate(){
-        console.log(this.state);
         var itemsCopy = _.cloneDeep(this.state.results.items);
         var orderId = this.state.results.orderId;
-        console.log(orderId);
-        console.log(itemsCopy);
+        var newTotal = _.sumBy(itemsCopy,(item) => {
+            return item.Quantity * item.Price;
+        })
+        console.log(newTotal);
         var url = 'http://localhost:5000/orders/'
         request.put(url)
             .set('accept','json')
             .send({
-                orderId: orderId,
+                orderId,
+                newTotal,
                 items: itemsCopy
             })
             .end((err,res) => {
@@ -125,14 +127,13 @@ class Orders extends Component {
             })
     }
 
-    handleQuantityChange(e,itemIndex){
+    handleQuantityChange(e,orderIndex){
         e.preventDefault();
-        console.log(e.target.value,itemIndex);
+        console.log(e.target.value,orderIndex);
         var itemsCopy = _.cloneDeep(this.state.results.items);
         itemsCopy = _.map(itemsCopy,(item,index) => {
-            if(index === itemIndex){
+            if(index === orderIndex){
                 item.Quantity = parseInt(e.target.value,10);
-                console.log(item)
                 return item;
                 
             }
@@ -152,6 +153,9 @@ class Orders extends Component {
             
             return <li key={index} >Order Number: {order.OrderID}, Order Total: ${order.OrderTotal}, Order Completed: {order.Completed}</li>
         })
+        const orderTotal = _.sumBy(this.state.results.items,(item) => {
+            return item.Quantity * item.Price;
+        })
         const results = _.map(this.state.results.items,(result,index) => {
             let total = result.Price * result.Quantity
             return (
@@ -167,11 +171,10 @@ class Orders extends Component {
         })
         return (
             
-            <div>This is orders page
+            <div>
                 <form >
                     <input type="text" name="searchOrder" onChange={this.handleSearchChange.bind(this)}/>
                     <button onClick={this.handleOrderSearch.bind(this)}>Search</button>
-                    <button onClick={this.handleOrderDelete.bind(this)}>Delete</button>
                 </form>
                 {(this.state.results.items.length <= 0) ? null : 
                 <div className="orderResults">
@@ -185,6 +188,11 @@ class Orders extends Component {
                                 <th></th>
                             </tr>
                         </thead>
+                        <tfoot>
+                            <tr>
+                                <td colSpan={5}>Order Total: ${orderTotal.toFixed(2)}</td>
+                            </tr>
+                        </tfoot>    
                         <tbody>
                             {results}
                         </tbody>

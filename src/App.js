@@ -41,9 +41,14 @@ class App extends Component {
         if(err){
           throw Error(err);
         }
-        
+        console.log(JSON.parse(res.text));
+        var products = _.map(JSON.parse(res.text),(product) => {
+          product.Quantity = 1;
+          return product;
+        });
+        console.log(products);
         this.setState({
-          products: JSON.parse(res.text)
+          products
         });
       });
   }
@@ -64,7 +69,7 @@ class App extends Component {
         if(err){
           throw Error(err);
         }
-        //this.getOrders();
+        
         this.setState({
           cart: {
             total: 0,
@@ -72,18 +77,19 @@ class App extends Component {
             items: []
           }
         })
+        this.getProducts();
+
       })
   }
 
   handleCartAdd(product,count = 2){
     var cartCopy = _.cloneDeep(this.state.cart);
-    var newItem = [product.ProductID,count,product.Price];
-    cartCopy.items.push(newItem);
+    cartCopy.items.push(product);
     //TODO: replace random number for customerID with better process
     //random number is assigned to customer if not assigned 
     cartCopy.customerID = (!cartCopy.customerID) ? _.random(1,10) : cartCopy.customerID;
     cartCopy.total = _.sumBy(cartCopy.items, (item) => {
-      return item[2];
+      return item.Quantity * item.Price;
     })
     this.setState({
       cart: cartCopy
@@ -91,8 +97,20 @@ class App extends Component {
 
   }
 
-  handleQuantityChange(e){
-    console.log('hotdog',e.target.value)
+  handleQuantityChange(e,productIndex){
+    e.preventDefault();
+    console.log(e.target.value,productIndex);
+    var productsCopy = _.cloneDeep(this.state.products);
+    productsCopy = _.map(productsCopy,(product,index) => {
+        if(index === productIndex){
+            product.Quantity = parseInt(e.target.value,10);
+            return product;       
+        }
+        return product;
+    })
+    this.setState({
+      products: productsCopy
+    })
   }
 
   render () {

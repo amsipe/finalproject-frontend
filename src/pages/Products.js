@@ -120,6 +120,7 @@ class Products extends Component {
               product={product}
               onCartAdd={this.props.addCart}
               onChangeQuantity={this.props.onChangeQuantity}
+              index={index}
                />
             )
           })}</ul>
@@ -141,7 +142,7 @@ class Products extends Component {
         <img src={"/img/" + this.props.product.ImgURL} alt={this.props.product.Name}/>
         <div className="product-name">{this.props.product.Name}</div>
         <div className="product-price">$ {this.props.product.Price}</div>
-        <Quantity select={1} count={10} onChangeQuantity={this.props.onChangeQuantity}/>
+        <Quantity select={this.props.product.Quantity} count={10} onChangeQuantity={this.props.onChangeQuantity} index={this.props.index}/>
         <button className="add-button" onClick={() => {this.props.onCartAdd(this.props.product)}}>Add to Cart</button>
        </li>
       );
