@@ -1,5 +1,8 @@
 body {
   font-family: 'Droid Serif', serif;
+  background-color: #555555;
+
+  
 }
 img {
   height: 200px;
@@ -16,11 +19,23 @@ ul {
 
 header {
   margin-bottom: 20px;
+  
+}
+
+button {
+  height: 30px;
+  min-width: 80px;
+  background-color: #4C8AF5;
+  color: white;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  cursor: pointer;
 }
 /* Main Nav */
 ul.main-nav {
   padding-left: 30px;
   background-color: rgb(34,34,34);
+  opacity: 1;
 
 }
 
@@ -40,7 +55,7 @@ ul.main-nav {
 }
 
 .main-nav .active {
-  background-color: rgba(255,255,255,0.2);
+  background-color: #555555;
 }
 
 .cart {
@@ -89,6 +104,8 @@ ul.product-list {
 
 li.product-item {
   border: 1px solid black;
+  background-color: rgba(255,255,255,0.2);
+  border-radius: 4px;
   float: left;
   /* width: 28.3333%; */
   /* max-width: 350px; */
@@ -113,20 +130,38 @@ li.product-item {
   float: right;
   margin-bottom: 8px;
   margin-right: 8px;
-  background-color: #4C8AF5;
-  color: white;
-  border: 1px solid transparent;
-  border-radius: 5px;
-  cursor: pointer;
+
 }
 
-/* Orders Page */
+/***** Orders Page ******/
+.order-search {
+  margin: 0 auto;
+  margin-bottom: 30px;
+  display: block;
+  width: 300px;
+  
+}
 
+.order-search input {
+  padding-left: 5px;
+  height: 25px;
+  border-radius: 5px;
+  border: 1px solid transparent;
+}
+
+.order-search button {
+ margin-left: 8px;
+ float: right;
+ width: 80px;
+}
 .orderResults {
   width: 400px;
-  height: 400px;
+  height: auto;
   margin: 0 auto;
   border: 1px solid black;
+  border-radius: 4px;
+  background-color: rgba(255,255,255,0.85);
+  overflow: none;
 }
 
 .orderResults table {
@@ -150,4 +185,54 @@ li.product-item {
 .orderResults td {
   text-align: center;
 }
+
+.orderResults-modify {
+  text-align: right;
+
+  margin: 0 10px 10px 0;
+}
+
+.orderResults-modify button {
+  background-color: #3273c5;
+  height: 30px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+  margin-right: 8px;
+}
+
+.results-remove {
+  background-color: #7B1D0E;
+  height: 22px;
+  min-width: 10px;
+}
 /* End Orders Page */
+
+/* Add Product Form */
+.addProduct-form {
+  padding: 10px;
+  display: block;
+  margin: 0 auto;
+  max-width: 300px;
+}
+.newProduct-label {
+  display: block;
+}
+
+.addProduct-button {
+  display: block;
+  margin-bottom: 8px;
+  margin-right: 8px;
+  background-color: #4C8AF5;
+  color: white;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.ReactModal__Body--open {
+  overflow: hidden;
+}
+
+/* End Add Product Form */

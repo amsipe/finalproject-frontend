@@ -27,6 +27,12 @@ class App extends Component {
         description: '',
         categoryId: 'Select...'
       },
+      editProduct: {
+        productName: '',
+        price: '',
+        description: '',
+        categoryId: 'Select...'
+      },
       categories: []
       
     }
@@ -36,6 +42,8 @@ class App extends Component {
     this.handleQuantityChange = this.handleQuantityChange.bind(this);
     this.handleNewProductChange = this.handleNewProductChange.bind(this);
     this.handleNewProductSubmit = this.handleNewProductSubmit.bind(this);
+    this.handleEditChange = this.handleEditChange.bind(this);
+    this.handleEditSubmit = this.handleEditSubmit.bind(this);
 
    
   }
@@ -154,12 +162,53 @@ class App extends Component {
 
   handleNewProductSubmit(e){
     e.preventDefault();
-    console.log(e);
+    // console.log(e);
     var newProductCopy = _.cloneDeep(this.state.newProduct);
+    // console.log(newProductCopy);
     var url = 'http://localhost:5000/products';
     request
       .post(url)
       .send(newProductCopy)
+      .set('accept','json')
+      .end((err,res) => {
+        if(err){
+          throw Error(err);
+        }
+        this.setState({
+          newProduct: {
+            productName: '',
+            imgUrl: '',
+            price: '',
+            description: '',
+            categoryId: 'Select...'
+          }
+        })
+
+      })
+  }
+
+  handleEditChange(e){
+    e.preventDefault();
+    // console.log(e.target.name)
+    const editProduct = _.cloneDeep(this.state.editProduct);
+    // console.log(editProduct);
+    editProduct[e.target.name] = e.target.value || e.target.placeholder;
+    // console.log(editProduct);
+    this.setState({
+      editProduct
+    })
+  }
+
+  handleEditSubmit(e,productId){
+    e.preventDefault();
+    console.log(e,this.state.editProduct,productId);
+    var editProductCopy = _.cloneDeep(this.state.editProduct);
+    editProductCopy.productId = productId; 
+    console.log(editProductCopy);
+    var url = 'http://localhost:5000/products';
+    request
+      .put(url)
+      .send(editProductCopy)
       .set('accept','json')
       .end((err,res) => {
         if(err){
@@ -186,6 +235,9 @@ class App extends Component {
         categories={this.state.categories}
         productForm={this.state.newProduct}
         onNewProductSubmit={this.handleNewProductSubmit}
+        onEditChange={this.handleEditChange}
+        editProduct={this.state.editProduct}
+        onEditSubmit={this.handleEditSubmit}
         />}/>
         <Route path="/orders" component={Orders}/>
       </div>
