@@ -164,7 +164,7 @@ class Orders extends Component {
                         <td>{result.Name}</td>
                         <td><Quantity select={result.Quantity} count={10} index={index} onChangeQuantity={this.handleQuantityChange}/></td>
                         <td>${total.toFixed(2)}</td>
-                        <td><button onClick={()=>{this.handleItemRemove(index)}}>Remove</button></td>
+                        <td><button className="results-remove"onClick={()=>{this.handleItemRemove(index)}}>Remove</button></td>
 
                     </tr>    
             )
@@ -172,8 +172,8 @@ class Orders extends Component {
         return (
             
             <div>
-                <form >
-                    <input type="text" name="searchOrder" onChange={this.handleSearchChange.bind(this)}/>
+                <form className="order-search">
+                    <input type="text" name="searchOrder" placeholder="Search OrderID"onChange={this.handleSearchChange.bind(this)}/>
                     <button onClick={this.handleOrderSearch.bind(this)}>Search</button>
                 </form>
                 {(this.state.results.items.length <= 0) ? null : 
@@ -190,15 +190,17 @@ class Orders extends Component {
                         </thead>
                         <tfoot>
                             <tr>
-                                <td colSpan={5}>Order Total: ${orderTotal.toFixed(2)}</td>
+                                <td colSpan={5}>Order Total: <strong>${orderTotal.toFixed(2)}</strong></td>
                             </tr>
                         </tfoot>    
                         <tbody>
                             {results}
                         </tbody>
-                    </table>     
-                    <button onClick={this.handleOrderUpdate}>Update Order</button>
-                    <button onClick={this.handleOrderDelete}>Cancel Order</button>   
+                    </table>
+                    <div className="orderResults-modify">     
+                        <button onClick={this.handleOrderUpdate}>Update Order</button>
+                        <button onClick={this.handleOrderDelete}>Cancel Order</button>   
+                    </div>
                 </div>   
                 } 
                 <ul className="orders-list">{orders}</ul>
