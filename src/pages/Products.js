@@ -11,6 +11,7 @@ class Products extends Component {
     super(props);
     this.state = {
       modalOpen: false
+      
     }
     this.toggleModal = this.toggleModal.bind(this);
   }
@@ -20,6 +21,7 @@ class Products extends Component {
       modalOpen: this.state.modalOpen ? false : true
     })
   }
+
 
   render() {
 
@@ -87,36 +89,57 @@ class Products extends Component {
     constructor(props){
       super(props);
       this.state = {
-        showEdit: false
+        editModal: false,
+        cartAdded: false,
+        addToCart: true
       }
-      this.handleEditForm = this.handleEditForm.bind(this);
-    }
-    handleEditForm(){
-      this.setState({
-        showEdit: this.state.showEdit ? false : true
-      })
 
+      this.toggleEditModal = this.toggleEditModal.bind(this);
+      this.toggleCartMethod = this.toggleCartMethod.bind(this);
+    }
+
+    toggleEditModal(){
+      this.setState({
+        editModal: this.state.editModal ? false : true
+      })
+    }
+
+    toggleCartMethod(){
+      this.setState({
+        addToCart: this.state.addToCart ? false : true
+      })
     }
     
     render(){
-  
+      const cartMethod = this.state.addToCart;
+
       return (
         <li className="product-item">
         <img src={"/img/" + this.props.product.ImgURL} alt={this.props.product.Name}/>
         <div className="product-name">{this.props.product.Name}</div>
         <div className="product-price">$ {this.props.product.Price}</div>
         <Quantity select={this.props.product.Quantity} count={10} onChangeQuantity={this.props.onChangeQuantity} index={this.props.index}/>
-        <button onClick={this.handleEditForm}>Edit Details</button>
-        <button className="add-button" onClick={() => {this.props.onCartAdd(this.props.product)}}>Add to Cart</button>
-        {(this.state.showEdit) 
-          ? <EditForm 
+        <button onClick={this.toggleEditModal}>Edit Details</button>
+        <button 
+        className={cartMethod ? "add-cart-button" : "remove-cart-button"}
+         onClick={() => {this.props.onCartAdd(this.props.product,this.state.addToCart); this.toggleCartMethod();}}>
+         {(cartMethod) ? "Add to Cart" : "Remove"}
+         </button>
+        <Modal 
+        isOpen={this.state.editModal}
+        contentLabel="Add New Product Form"
+        onRequestClose={this.toggleEditModal}
+        shouldCloseOnOverlayClick={false}
+        style={addProductStyles}>
+          <EditForm 
           product={this.props.product} 
           categories={this.props.categories} 
           onEditChange={this.props.onEditChange} 
           editProduct={this.props.editProduct}
           onEditSubmit={this.props.onEditSubmit}
+          onClose={this.toggleEditModal}
           /> 
-          : null}
+        </Modal>
        </li>
       );
     }
@@ -127,11 +150,13 @@ class Products extends Component {
       //TODO: find a way to make the values already populate in form fields.
       return (
         <div>
+          <button onClick={props.onClose}>Close</button>
+          <img src={"/img/" + props.product.ImgURL} alt={props.product.Name}/>
           <form 
           /* onSubmit={this.props.onNewProductSubmit}  */
           
           /* onFocus={(e)=>{props.onEditChange(e)}} */
-          onSubmit={(e) => {props.onEditSubmit(e,props.product.ProductID)}}
+          onSubmit={(e) => {props.onEditSubmit(e,props.product.ProductID); props.onClose();}}
           >
             <p>Update details:</p>
             <label htmlFor="productName">Name</label>

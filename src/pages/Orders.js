@@ -12,29 +12,31 @@ class Orders extends Component {
             results: {
                 orderId: null,
                 items: []
-            }
+            },
+            editModal: false
         }
         this.handleItemRemove = this.handleItemRemove.bind(this);
         this.handleOrderUpdate = this.handleOrderUpdate.bind(this);
         this.handleQuantityChange = this.handleQuantityChange.bind(this);
         this.handleOrderDelete = this.handleOrderDelete.bind(this);
+        this.getOrders = this.getOrders.bind(this);
     }
     // componentWillMount(){
     //     this.getOrders();
     //   }
-    // getOrders(){
-    //     var url = 'http://localhost:5000/orders';
-    //     request.get(url)
-    //     .set('accept','json')
-    //     .end((err,res) => {
-    //       if(err){
-    //         throw Error(err);
-    //       }
-    //       this.setState({
-    //         orders: JSON.parse(res.text)
-    //       });
-    //     });
-    //   }
+    getOrders(){
+        var url = 'http://localhost:5000/orders';
+        request.get(url)
+        .set('accept','json')
+        .end((err,res) => {
+          if(err){
+            throw Error(err);
+          }
+          this.setState({
+            orders: JSON.parse(res.text)
+          });
+        });
+      }
     handleOrderDelete(id){
     
     //e.preventDefault();
@@ -172,6 +174,7 @@ class Orders extends Component {
         return (
             
             <div>
+                    <button onClick={this.getOrders}>Get All Orders</button>
                 <form className="order-search">
                     <input type="text" name="searchOrder" placeholder="Search OrderID"onChange={this.handleSearchChange.bind(this)}/>
                     <button onClick={this.handleOrderSearch.bind(this)}>Search</button>
