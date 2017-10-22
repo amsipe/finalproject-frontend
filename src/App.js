@@ -61,8 +61,6 @@ class App extends Component {
         if(err){
           throw Error(err);
         }
-        console.log(JSON.parse(res.text));
-
         this.setState({
           categories: JSON.parse(res.text)
         });
@@ -76,12 +74,10 @@ class App extends Component {
         if(err){
           throw Error(err);
         }
-        console.log(JSON.parse(res.text));
         var products = _.map(JSON.parse(res.text),(product) => {
           product.Quantity = 1;
           return product;
         });
-        console.log(products);
         this.setState({
           products
         });
@@ -117,9 +113,18 @@ class App extends Component {
       })
   }
 
-  handleCartAdd(product,count = 2){
+  handleCartAdd(product,adding){
+    console.log(adding);
     var cartCopy = _.cloneDeep(this.state.cart);
-    cartCopy.items.push(product);
+    if(adding){
+      cartCopy.items.push(product);
+    } else {
+      cartCopy.items = _.filter(cartCopy.items, (item) => {
+        console.log(product);
+        return item.ProductID !== product.ProductID;
+      })
+      console.log(cartCopy.items);
+    }
     //TODO: replace random number for customerID with better process
     //random number is assigned to customer if not assigned 
     cartCopy.customerID = (!cartCopy.customerID) ? _.random(1,10) : cartCopy.customerID;
@@ -129,6 +134,7 @@ class App extends Component {
     this.setState({
       cart: cartCopy
     })
+
 
   }
 
@@ -162,9 +168,7 @@ class App extends Component {
 
   handleNewProductSubmit(e){
     e.preventDefault();
-    // console.log(e);
     var newProductCopy = _.cloneDeep(this.state.newProduct);
-    // console.log(newProductCopy);
     var url = 'http://localhost:5000/products';
     request
       .post(url)
@@ -189,11 +193,8 @@ class App extends Component {
 
   handleEditChange(e){
     e.preventDefault();
-    // console.log(e.target.name)
     const editProduct = _.cloneDeep(this.state.editProduct);
-    // console.log(editProduct);
     editProduct[e.target.name] = e.target.value || e.target.placeholder;
-    // console.log(editProduct);
     this.setState({
       editProduct
     })
@@ -214,7 +215,14 @@ class App extends Component {
         if(err){
           throw Error(err);
         }
-        console.log('hotdog');
+        this.setState({
+          editProduct: {
+            productName: '',
+            price: '',
+            description: '',
+            categoryId: 'Select...'
+          }
+        })
       })
   }
 

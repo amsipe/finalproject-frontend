@@ -126,12 +126,18 @@ li.product-item {
   clear: left;
 }
 
-.add-button {
+.add-cart-button,.remove-cart-button {
   float: right;
   margin-bottom: 8px;
   margin-right: 8px;
 
 }
+
+.remove-cart-button {
+  background-color: #7B1D0E;
+}
+
+
 
 /***** Orders Page ******/
 .order-search {
