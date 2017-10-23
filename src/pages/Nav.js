@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import {NavLink} from 'react-router-dom';
+
 import './main.css';
 
 class Nav extends Component {
-    // constructor(props){
-    //     super(props);
+    // constructor(){
+    //     super();
     // }
+
+
     render() {
         return (
             <header>
@@ -14,7 +17,10 @@ class Nav extends Component {
                     <li><NavLink to="/products">PRODUCTS</NavLink></li>
                     <li><NavLink to="/orders">ORDERS</NavLink></li>
                 </ul>
-                <span className="cart">{this.props.cart.items.length}</span>
+                <div className="cart">
+                    <span className="checkout" onClick={this.props.toggleCartOpen}>Checkout</span>
+                    <span>Cart Items: {this.props.cart.items.length}</span>
+                </div>
             </header>
         )
     }

@@ -3,11 +3,12 @@ import request from 'superagent';
 import _ from 'lodash';
 // import './App.css';
 import {BrowserRouter, Route} from 'react-router-dom'
-
+import Modal from 'react-modal';
 import Products from './pages/Products';
 import Orders from './pages/Orders';
 import Nav from './pages/Nav';
 import Home from './pages/Home';
+
 
 class App extends Component {
   constructor(props){
@@ -33,7 +34,8 @@ class App extends Component {
         description: '',
         categoryId: 'Select...'
       },
-      categories: []
+      categories: [],
+      cartOpen: false
       
     }
     this.getProducts = this.getProducts.bind(this);
@@ -44,6 +46,7 @@ class App extends Component {
     this.handleNewProductSubmit = this.handleNewProductSubmit.bind(this);
     this.handleEditChange = this.handleEditChange.bind(this);
     this.handleEditSubmit = this.handleEditSubmit.bind(this);
+    this.toggleCartOpen = this.toggleCartOpen.bind(this);
 
    
   }
@@ -83,6 +86,13 @@ class App extends Component {
         });
       });
   }
+
+  toggleCartOpen(){
+    console.log('hotdog')
+    this.setState({
+        cartOpen: !this.state.cartOpen
+    })
+}
 
   handleOrderSubmit(){
     //TODO: replace send object with cart state
@@ -231,7 +241,7 @@ class App extends Component {
    return (
      <BrowserRouter>
       <div>
-        <Nav cart={this.state.cart}/>
+        <Nav cart={this.state.cart} toggleCartOpen={this.toggleCartOpen} />
         <Route exact path="/" component={Home}/>
         <Route path="/products" render={() => <Products 
         products={this.state.products} 
@@ -248,6 +258,16 @@ class App extends Component {
         onEditSubmit={this.handleEditSubmit}
         />}/>
         <Route path="/orders" component={Orders}/>
+        <Modal 
+        isOpen={this.state.cartOpen}
+        contentLabel="Shopping Cart"
+        onRequestClose={this.toggleModal}
+        shouldCloseOnOverlayClick={true}
+        style={modalStyles}
+        >
+        <ShoppingCart cart={this.state.cart} toggleCartOpen={this.toggleCartOpen} orderSubmit={this.handleOrderSubmit}/>
+
+        </Modal>
       </div>
      </BrowserRouter>
    )
@@ -255,3 +275,69 @@ class App extends Component {
 }
 
 export default App;
+
+const ShoppingCart = (props) => {
+  //TODO: add method to change the count of a product from cart
+  const items = _.map(props.cart.items,(item,index) => {
+    let total = item.Price * item.Quantity
+      return (
+              <tr key={index}>
+                  <td>{item.Name}</td>
+                  <td>{item.Quantity}</td>
+                  <td>${total.toFixed(2)}</td>
+                  
+              </tr>    
+      )
+    })
+  return (
+    <div>
+      <button className="modalClose" onClick={() => {props.toggleCartOpen()}}>Close</button>
+      <div className="orderResults">
+        <table>
+          <thead>
+              <tr>
+                  <th>Product Name</th>
+                  <th>Quantity</th>
+                  <th>Total</th>
+                  
+              </tr>
+          </thead>
+          <tfoot>
+              <tr>
+                  <td colSpan={3}>Order Total: <strong>${props.cart.total.toFixed(2)}</strong></td>
+              </tr>
+          </tfoot>    
+          <tbody>
+              {items}
+          </tbody>
+        </table>
+      </div>
+      <button onClick={() => {props.orderSubmit()}}>Submit Order</button>
+    </div>
+  )
+}
+
+const modalStyles = {
+  content : {
+    top                   : '20%',
+    left                  : '10%',
+    right                 : '10%',
+    bottom                : '10%',
+    minWidth              : '10%',
+    maxWidth              : '500px',
+    margin                : '20px auto 20px auto',
+    padding               : '10px',
+    overflow              : 'none'
+
+    // transition            : 'transform 1000ms',
+    // transform             : 'translate(-50%, -50%)'
+  },
+  overlay : {
+    position          : 'fixed',
+    top               : 0,
+    left              : 0,
+    right             : 0,
+    bottom            : 0,
+    backgroundColor   : 'rgba(0, 0, 0, 0.45)'
+  },
+};

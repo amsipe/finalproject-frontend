@@ -9,7 +9,7 @@ const Quantity = (props) => {
     }
     
     return (
-        <select value={props.select} onChange={(e)=> {props.onChangeQuantity(e,props.index)}}>
+        <select className="quantity-select" value={props.select} onChange={(e)=> {props.onChangeQuantity(e,props.index)}}>
             {options}
         </select>
     );
