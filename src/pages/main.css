@@ -2,6 +2,7 @@ body {
   font-family: 'Droid Serif', serif;
   /* background-color: #555555; */
   background-color: #901808;
+  background-image: url('./icons/nebula1.png');
 
   
 }
@@ -45,12 +46,15 @@ ul.main-nav {
   padding-left: 30px;
   opacity: 1;
   display: inline-block;
+  height: 45px;
 
 }
 
 .main-nav li {
   display: inline-block;
   margin: 0;
+  line-height: 45px;
+  width: 105px;
   
 }
 
@@ -63,7 +67,7 @@ ul.main-nav {
   color: #edec51;
   text-align: center;
   text-decoration: none;
-  padding: 8px 10px;
+  padding: 0px 10px;
 
 }
 
@@ -74,7 +78,7 @@ ul.main-nav {
 .cart {
   float: right;
   color: #edec51;
-  line-height: 35px;
+  line-height: 45px;
   padding-right: 30px; 
 }
 

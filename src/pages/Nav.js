@@ -20,7 +20,7 @@ class Nav extends Component {
                 <div className="cart">
                     <span className="checkout" onClick={this.props.toggleCartOpen}>Checkout</span>
                     <span>Cart Items: {this.props.cart.items.length}</span>
-                    <span>Cart Total: {this.props.cart.total}</span>
+                    <span>Cart Total: {this.props.cart.total.toFixed(2)}</span>
                     
                 </div>
             </header>
