@@ -54,7 +54,12 @@ class App extends Component {
   componentWillMount(){
     this.getProducts();
     this.getCategories();
+
   }  
+
+  // componentWillUpdate(){
+  //   this.getProducts();
+  // }
 
   getCategories(){
     var url = 'http://localhost:5000/categories'
@@ -79,16 +84,17 @@ class App extends Component {
         }
         var products = _.map(JSON.parse(res.text),(product) => {
           product.Quantity = 1;
+          product.InCart = false;
           return product;
         });
         this.setState({
           products
         });
+        console.log(this.state.products);
       });
   }
 
   toggleCartOpen(){
-    console.log('hotdog')
     this.setState({
         cartOpen: !this.state.cartOpen
     })
@@ -124,16 +130,14 @@ class App extends Component {
   }
 
   handleCartAdd(product,adding){
-    console.log(adding);
+    product.InCart = !product.InCart;
     var cartCopy = _.cloneDeep(this.state.cart);
     if(adding){
       cartCopy.items.push(product);
     } else {
       cartCopy.items = _.filter(cartCopy.items, (item) => {
-        console.log(product);
         return item.ProductID !== product.ProductID;
       })
-      console.log(cartCopy.items);
     }
     //TODO: replace random number for customerID with better process
     //random number is assigned to customer if not assigned 
@@ -149,8 +153,6 @@ class App extends Component {
   }
 
   handleQuantityChange(e,productIndex){
-    e.preventDefault();
-    console.log(e.target.value,productIndex);
     var productsCopy = _.cloneDeep(this.state.products);
     productsCopy = _.map(productsCopy,(product,index) => {
         if(index === productIndex){
@@ -165,12 +167,8 @@ class App extends Component {
   }
 
   handleNewProductChange(e){
-    e.preventDefault();
-    console.log(e.target.value);
     const newProduct = _.cloneDeep(this.state.newProduct);
-    console.log(newProduct);
     newProduct[e.target.name] = e.target.value;
-    console.log(newProduct)
     this.setState({
       newProduct
     })
@@ -212,10 +210,8 @@ class App extends Component {
 
   handleEditSubmit(e,productId){
     e.preventDefault();
-    console.log(e,this.state.editProduct,productId);
     var editProductCopy = _.cloneDeep(this.state.editProduct);
     editProductCopy.productId = productId; 
-    console.log(editProductCopy);
     var url = 'http://localhost:5000/products';
     request
       .put(url)
@@ -233,6 +229,7 @@ class App extends Component {
             categoryId: 'Select...'
           }
         })
+        this.getProducts();
       })
   }
 
@@ -289,30 +286,35 @@ const ShoppingCart = (props) => {
               </tr>    
       )
     })
+    console.log(items.length);
   return (
     <div>
       <button className="modalClose" onClick={() => {props.toggleCartOpen()}}>Close</button>
-      <div className="orderResults">
-        <table>
-          <thead>
-              <tr>
-                  <th>Product Name</th>
-                  <th>Quantity</th>
-                  <th>Total</th>
-                  
-              </tr>
-          </thead>
-          <tfoot>
-              <tr>
-                  <td colSpan={3}>Order Total: <strong>${props.cart.total.toFixed(2)}</strong></td>
-              </tr>
-          </tfoot>    
-          <tbody>
-              {items}
-          </tbody>
-        </table>
+      <div className="table-results">
+        {items.length <= 0 ? 
+          <p>--- Cart is Empty ---</p>
+          :  
+          <table>
+            <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                    
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <td colSpan={3}>Order Total: <strong>${props.cart.total.toFixed(2)}</strong></td>
+                </tr>
+            </tfoot>    
+            <tbody>
+                {items}
+            </tbody>
+          </table>
+        }
       </div>
-      <button onClick={() => {props.orderSubmit()}}>Submit Order</button>
+      <button className="submit-order" onClick={() => {props.orderSubmit()}}>Submit Order</button>
     </div>
   )
 }
