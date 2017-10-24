@@ -10,33 +10,42 @@ class ProductItem extends Component {
     constructor(props){
       super(props);
       this.state = {
-        editModal: false,
-        addToCart: true,
-        detailModal: false
+        detailModal: false, //handles showing the details modal
+        editModal: false, //handles showing the edit form in details modal
+        addToCart: true //handles showing which css class to show
       }
 
       this.toggleEditForm = this.toggleEditForm.bind(this);
       this.toggleCartMethod = this.toggleCartMethod.bind(this);
       this.toggleDetailModal = this.toggleDetailModal.bind(this);
+      this.handleEditFormClose = this.handleEditFormClose.bind(this);
     }
 
     toggleEditForm(){
       this.setState({
-        editModal: this.state.editModal ? false : true
+        editModal: !this.state.editModal
+      })
+    }
+
+    handleEditFormClose(){
+      this.setState({
+        editModal: false
       })
     }
 
     toggleCartMethod(){
       this.setState({
-        addToCart: this.state.addToCart ? false : true
+        addToCart: !this.state.addToCart
       })
     }
 
     toggleDetailModal(){
       this.setState({
-        detailModal: this.state.detailModal ? false : true
+        detailModal: !this.state.detailModal
       })
     }
+
+
     componentDidUpdate(){
       console.log('hotdog')
     }
@@ -73,6 +82,7 @@ class ProductItem extends Component {
             onEditSubmit={this.props.onEditSubmit}
             onClose={this.toggleDetailModal}
             toggleEditForm={this.toggleEditForm}
+            closeEditForm={this.handleEditFormClose}
             showEdit={this.state.editModal}
             /> 
           </Modal>
@@ -82,11 +92,11 @@ class ProductItem extends Component {
   }
 
   const EditForm = (props) => {
-
+      //TODO: rename edit form since it's now a child of details view. look at function names too.
       //TODO: find a way to make the values already populate in form fields.
       return (
         <div>
-          <button className="modalClose" onClick={props.onClose}>Close</button>
+          <button className="modalClose" onClick={()=>{props.onClose(); props.closeEditForm();}}>Close</button>
           <div className="product-details-wrapper">
             <img src={"/img/" + props.product.ImgURL} alt={props.product.Name}/>   
             <div className="product-details-container">
@@ -96,21 +106,27 @@ class ProductItem extends Component {
             </div>
             
           </div>
-          <button onClick={props.toggleEditForm}>Edit Details</button>
+          <a className="edit-toggle"onClick={props.toggleEditForm}>Edit Details</a>
 
           {props.showEdit ? 
-            <form onSubmit={(e) => {props.onEditSubmit(e,props.product.ProductID); props.toggleEditForm();}}>
+            <form className="edit-form"onSubmit={(e) => {props.onEditSubmit(e,props.product.ProductID); props.toggleEditForm();}}>
               <p>Update details:</p>
-              <label htmlFor="productName">Name</label>
-              <input type="text" name="productName" value={props.editProduct.productName} onChange={(e) => {props.onEditChange(e)}}/>
-              <label htmlFor="price">Price</label>
-              <input type="text" name="price" value={props.editProduct.price} onChange={(e) => {props.onEditChange(e)}}/>
-              <label htmlFor="categoryId">Category</label>
-              <select name="categoryId" value={props.editProduct.categoryId} onChange={(e) => {props.onEditChange(e)}}>
-                {props.categories}
-              </select>  
-              <label htmlFor="description">Description</label>
-              <textarea type="text" name="description" placeholder={props.product.Description} value={props.editProduct.description} onChange={(e) => {props.onEditChange(e)}}/>
+              <div className="edit-container-left">
+                <label htmlFor="productName">Name</label>
+                <input type="text" name="productName" value={props.editProduct.productName} onChange={(e) => {props.onEditChange(e)}}/>
+                <label htmlFor="price">Price</label>
+                <input type="text" name="price" value={props.editProduct.price} onChange={(e) => {props.onEditChange(e)}}/>
+              </div>
+              <div className="edit-container-right">
+                <label htmlFor="description">Description</label>
+                <textarea type="text" name="description" rows="6" value={props.editProduct.description} onChange={(e) => {props.onEditChange(e)}}/>
+              </div>
+              <div className="edit-container-left">
+                <label htmlFor="categoryId">Category</label>
+                <select name="categoryId" value={props.editProduct.categoryId} onChange={(e) => {props.onEditChange(e)}}>
+                  {props.categories}
+                </select>  
+              </div>  
               <button>Save Changes</button>
             </form>   
           :

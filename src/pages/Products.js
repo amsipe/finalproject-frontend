@@ -35,7 +35,7 @@ class Products extends Component {
     //TODO: fix not having placeholder in select dropdown
     return (
       <div>
-        <button onClick={() => {this.toggleModal()}}>Add New Product</button>
+        <button className="add-product-button"onClick={() => {this.toggleModal()}}>Add New Product</button>
         <Modal 
         isOpen={this.state.modalOpen}
         contentLabel="Add New Product Form"
@@ -43,7 +43,7 @@ class Products extends Component {
         shouldCloseOnOverlayClick={false}
         style={modalStyles}
         >
-          <button onClick={()=>{this.toggleModal()}}>Close</button>
+          <button className="modalClose"onClick={()=>{this.toggleModal()}}>Close</button>
           <form className="addProduct-form"onSubmit={this.props.onNewProductSubmit} onChange={this.props.onChangeNewProduct}>
             <p>Please enter product details:</p>
             <label htmlFor="productName" className="newProduct-label">Name:</label>
@@ -61,7 +61,7 @@ class Products extends Component {
             <label htmlFor="description" className="newProduct-label">Description:</label>
             <textarea type="text" name="description"  value={this.props.productForm.description}/>
             
-            <button className="addProduct-button">Add Product</button>
+            <button className="add-product-confirm">Add Product</button>
           </form>  
         </Modal>  
         <ul className="product-list">{this.props.products.map((product,index) => {

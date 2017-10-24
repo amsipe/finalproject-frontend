@@ -11,8 +11,9 @@ class Home extends Component {
 
         return (
             <div>
-                {this.props.children}
-                This is the main page.</div>
+                
+                This is the main page.
+            </div>
         )
     }
 }

@@ -166,7 +166,7 @@ class Orders extends Component {
                         <td>{result.Name}</td>
                         <td><Quantity select={result.Quantity} count={10} index={index} onChangeQuantity={this.handleQuantityChange}/></td>
                         <td>${total.toFixed(2)}</td>
-                        <td><button className="results-remove"onClick={()=>{this.handleItemRemove(index)}}>Remove</button></td>
+                        <td><a className="results-remove"onClick={()=>{this.handleItemRemove(index)}}>Remove</a></td>
 
                     </tr>    
             )
