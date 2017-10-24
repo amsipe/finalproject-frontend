@@ -28,7 +28,6 @@ ul {
 header {
   background-color: #474747;
   height: 45px;
-
 }
 
 textarea {
@@ -95,17 +94,30 @@ ul.main-nav {
   padding-right: 30px; 
 }
 
+.cart span {
+  display: inline-block;
+  width: 135px;
+  text-align: center;
+}
+
 .checkout {
   margin-right: 15px;
   color: #edec51;
   line-height: 35px;
-  border: 1.5px solid transparent;
+  border-left: 1.5px solid #edec51;
+  border-right: 1.5px solid #edec51;
+  border-bottom: 1.5px solid transparent;
   cursor: pointer;
   transition: 200ms;
 }
 
 .checkout:hover {
   border-bottom: 1.5px solid #edec51;
+}
+
+.submit-order {
+  margin: 15px auto 0 auto;
+  display: block;
 }
 /* End --- Main Nav */
 
@@ -125,7 +137,11 @@ li.product-item {
   /* max-width: 350px; */
   width: 365px;
 	height: auto;
-	margin: 2.5%;
+  margin: 2.5%;
+  
+  -webkit-box-shadow: 0px 8px 23px -2px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 8px 23px -2px rgba(0,0,0,0.75);
+  box-shadow: 0px 8px 23px -2px rgba(0,0,0,0.75);
 }
 
 .product-name, .product-price {
@@ -196,13 +212,20 @@ li.product-item {
 }
 
 
-/***** Orders Page ******/
-.order-search {
-  margin: 0 auto;
-  margin-bottom: 30px;
+/******** Orders Page **********/
+
+.search-container {
   display: block;
-  width: 300px;
-  
+  margin: 25px auto;
+  width: 400px;
+}
+
+.search-container button {
+  margin-left: 10px;
+
+}
+.order-search {
+  display: inline-block;
 }
 
 .order-search input {
@@ -210,66 +233,63 @@ li.product-item {
   height: 25px;
   border-radius: 5px;
   border: 1px solid transparent;
+  background-color: #BABABA;
+  outline: none;
 }
 
-.order-search button {
- margin-left: 8px;
- float: right;
- width: 80px;
-}
-.orderResults {
+
+.table-results {
   width: 400px;
   height: auto;
-  margin: 0 auto;
+  margin: 10px auto;
   border: 1px solid black;
   border-radius: 4px;
-  background-color: rgba(255,255,255,0.85);
-  overflow: none;
+  background-color: #ddd;
+  overflow: auto;
+  text-align: center;
+  clear: both;
+  -webkit-box-shadow: 2px 6px 40px -4px rgba(0,0,0,0.75);
+  -moz-box-shadow: 2px 6px 40px -4px rgba(0,0,0,0.75);
+  box-shadow: 2px 6px 40px -4px rgba(0,0,0,0.75);
 }
 
-.orderResults table {
+.table-results table {
   border: none;
-  
+  margin: 10px auto;
   padding: 5px;
 }
-.orderResults th,tr,td {
+.table-results th,tr,td {
   border: 1px solid black;
   border-collapse: collapse;
 }
 
-
-
-.orderResults table {
-  margin: 10px 10px;
-  width: auto;
-  display: block;
-}
-
-.orderResults td {
+.table-results td {
   text-align: center;
 }
 
-.orderResults-modify {
+.table-results-modify {
   text-align: right;
-
   margin: 0 10px 10px 0;
 }
 
-.orderResults-modify button {
+.table-results-modify button {
   margin-right: 8px;
 }
+
+
 
 .results-remove {
   color: #e15021;
   height: 22px;
   min-width: 10px;
   cursor: pointer;
+  font-size: .85em;
 }
 
 .results-remove:hover {
   text-decoration: underline;
 }
-/* End Orders Page */
+/*********** End Orders ***********Page */
 
 /* Add Product Form */
 .addProduct-form {
@@ -340,6 +360,7 @@ li.product-item {
 .modalClose {
   float: right;
   display: block;
+  width: 80px;
   margin-bottom: 15px;
 }
 .modalClose::after {
@@ -352,8 +373,12 @@ li.product-item {
 
 .edit-toggle {
   cursor: pointer;
-  text-decoration: underline;
+  transition: 200ms;
   color: #3273c5;
+}
+
+.edit-toggle:hover {
+  text-decoration: underline;
 }
 .edit-form {
   border-top: 1px solid #BABABA;

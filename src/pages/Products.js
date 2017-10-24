@@ -5,7 +5,6 @@ import _ from 'lodash';
 import './main.css';
 import ProductItem from './ProductItem'
 
-import Quantity from './Quantity';
 
 class Products extends Component {
   constructor(props){

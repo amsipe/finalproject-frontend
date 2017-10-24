@@ -21,9 +21,7 @@ class Orders extends Component {
         this.handleOrderDelete = this.handleOrderDelete.bind(this);
         this.getOrders = this.getOrders.bind(this);
     }
-    // componentWillMount(){
-    //     this.getOrders();
-    //   }
+
     getOrders(){
         var url = 'http://localhost:5000/orders';
         request.get(url)
@@ -37,31 +35,24 @@ class Orders extends Component {
           });
         });
       }
-    handleOrderDelete(id){
-    
-    //e.preventDefault();
-    //TODO: remove stateCopy as probably wont be needed
-    //var stateCopy = _.map(this.state.orders,_.cloneDeep);
 
-    //TODO: remove state.search if no longer have free floating delete button
-    var orderId = this.state.results.orderId;
-    var url = 'http://localhost:5000/orders/' + orderId;
-    request
-        .del(url)
-        .set('accept','json')
-        .end((err,res) => {
-        if(err){
-            throw Error(err);
-        }
-        //TODO: remove this.getorders later
-        //this.getOrders();
-        this.setState({
-            results: {
-                orderId: null,
-                items: []
+    handleOrderDelete(id){
+        var orderId = this.state.results.orderId;
+        var url = 'http://localhost:5000/orders/' + orderId;
+        request
+            .del(url)
+            .set('accept','json')
+            .end((err,res) => {
+            if(err){
+                throw Error(err);
             }
-        })
-        })
+            this.setState({
+                results: {
+                    orderId: null,
+                    items: []
+                }
+            })
+            })
     }
 
     handleSearchChange(e){
@@ -82,28 +73,22 @@ class Orders extends Component {
           }
           this.setState({
             results: {
-                orderId: orderId,
+                orderId,
                 items: JSON.parse(res.text)
             }
           });
-          console.log(this.state);
         });
     }
 
     handleItemRemove(key){
-        console.log(this.state);
         var stateCopy = _.cloneDeep(this.state.results.items);
-        console.log(stateCopy[key]);
         stateCopy = stateCopy.filter((item,index) => index !== key)
-        console.log(this.state);
-
         this.setState({
             results: {
                orderId: this.state.results.orderId, 
                items: stateCopy
             }
         })
-        console.log(this.state);
     }
 
     handleOrderUpdate(){
@@ -125,19 +110,22 @@ class Orders extends Component {
                 if(err){
                     throw Error(err);
                   }
-                  console.log(res);
+                  this.setState({
+                    results: {
+                        orderId: null,
+                        items: []
+                    }
+                })
             })
     }
 
     handleQuantityChange(e,orderIndex){
         e.preventDefault();
-        console.log(e.target.value,orderIndex);
         var itemsCopy = _.cloneDeep(this.state.results.items);
         itemsCopy = _.map(itemsCopy,(item,index) => {
             if(index === orderIndex){
                 item.Quantity = parseInt(e.target.value,10);
                 return item;
-                
             }
             return item;
         })
@@ -152,9 +140,16 @@ class Orders extends Component {
 
     render() {
         const orders = _.map(this.state.orders,(order,index) => {
-            
-            return <li key={index} >Order Number: {order.OrderID}, Order Total: ${order.OrderTotal}, Order Completed: {order.Completed}</li>
+            return (
+                <tr key={order.OrderID}>
+                    <td>{order.OrderID}</td>
+                    <td style={{textAlign: 'right'}}>${order.OrderTotal.toFixed(2)}</td>
+                    <td>{order.CustomerID}</td>
+                    <td>{order.Completed > 0 ? "Completed" : "Pending" }</td>
+                  </tr>
+            )
         })
+        const grossSales = _.sumBy(this.state.orders,'OrderTotal');
         const orderTotal = _.sumBy(this.state.results.items,(item) => {
             return item.Quantity * item.Price;
         })
@@ -174,13 +169,16 @@ class Orders extends Component {
         return (
             
             <div>
-                    <button onClick={this.getOrders}>Get All Orders</button>
-                <form className="order-search">
-                    <input type="text" name="searchOrder" placeholder="Search OrderID"onChange={this.handleSearchChange.bind(this)}/>
-                    <button onClick={this.handleOrderSearch.bind(this)}>Search</button>
-                </form>
+                <div className="search-container">    
+                    <form className="order-search">
+                        <input type="text" name="searchOrder" placeholder="Search OrderID"onChange={this.handleSearchChange.bind(this)}/>
+                        <button onClick={this.handleOrderSearch.bind(this)}>Search</button>
+                        
+                    </form>
+                    <button className="get-orders-btn"onClick={this.getOrders}>Get All Orders</button>
+                </div>
                 {(this.state.results.items.length <= 0) ? null : 
-                <div className="orderResults">
+                <div className="table-results">
                     <table>
                         <thead>
                             <tr>
@@ -200,13 +198,36 @@ class Orders extends Component {
                             {results}
                         </tbody>
                     </table>
-                    <div className="orderResults-modify">     
+                    <div className="table-results-modify">     
                         <button onClick={this.handleOrderUpdate}>Update Order</button>
                         <button onClick={this.handleOrderDelete}>Cancel Order</button>   
                     </div>
                 </div>   
+                }
+                {orders.length <= 0 ?
+                    null
+                    :
+                    <div className="table-results">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Order Number</th>
+                                    <th>Order Total</th>
+                                    <th>Customer ID</th>
+                                    <th>Order Status</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <td colSpan={4}>Total Sales: <strong>${grossSales.toFixed(2)}</strong></td>
+                                </tr>
+                            </tfoot>    
+                            <tbody>
+                                {orders}
+                            </tbody>
+                        </table>
+                    </div>                
                 } 
-                <ul className="orders-list">{orders}</ul>
             </div>
 
         )

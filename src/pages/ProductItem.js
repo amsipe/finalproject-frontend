@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Modal from 'react-modal';
 // import request from 'superagent';
-import _ from 'lodash';
+// import _ from 'lodash';
 import './main.css';
 
 import Quantity from './Quantity';
@@ -46,12 +46,10 @@ class ProductItem extends Component {
     }
 
 
-    componentDidUpdate(){
-      console.log('hotdog')
-    }
+    // componentDidUpdate(){
+    //   console.log('hotdog')
+    // }
     render(){
-      const cartMethod = this.state.addToCart;
-
       return (
         <li className="product-item">
           <div>
@@ -62,16 +60,16 @@ class ProductItem extends Component {
           <div className="add-cart-options">
             <Quantity select={this.props.product.Quantity} count={10} onChangeQuantity={this.props.onChangeQuantity} index={this.props.index}/>
             <button 
-            className={cartMethod ? "add-cart-button border-grow" : "remove-cart-button border-grow"}
-            onClick={() => {this.props.onCartAdd(this.props.product,this.state.addToCart); this.toggleCartMethod();}}>
-            {(cartMethod) ? "ADD TO CART" : "Remove"}
+            className={!this.props.product.InCart ? "add-cart-button border-grow" : "remove-cart-button border-grow"}
+            onClick={() => {this.props.onCartAdd(this.props.product,!this.props.product.InCart); this.toggleCartMethod();}}>
+            {!this.props.product.InCart ? "ADD TO CART" : "Remove"}
             </button>
           </div>
           
           <Modal           
           isOpen={this.state.detailModal}
           contentLabel="Product Details"
-          onRequestClose={this.toggleDetailModal}
+          onRequestClose={()=>{this.toggleDetailModal();this.toggleEditForm();}}
           shouldCloseOnOverlayClick={true}
           style={modalStyles}>
             <EditForm 
