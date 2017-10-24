@@ -55,7 +55,6 @@ class App extends Component {
     this.getProducts();
     this.getCategories();
 
-    console.log('wobble')
   }  
 
   // componentWillUpdate(){

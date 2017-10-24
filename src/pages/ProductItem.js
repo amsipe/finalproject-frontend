@@ -62,7 +62,7 @@ class ProductItem extends Component {
             <button 
             className={!this.props.product.InCart ? "add-cart-button border-grow" : "remove-cart-button border-grow"}
             onClick={() => {this.props.onCartAdd(this.props.product,!this.props.product.InCart); this.toggleCartMethod();}}>
-            {!this.props.product.InCart ? "ADD TO CART" : "Remove"}
+            {!this.props.product.InCart ? "ADD TO CART" : "REMOVE"}
             </button>
           </div>
           
