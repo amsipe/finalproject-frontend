@@ -178,10 +178,11 @@ ul.main-nav {
 /******* Products Page *******/
 ul.product-list {
   list-style-type: none;
-  margin: 10px 0 0 0;
+  margin: 10px auto;
   display: block;
-  width: 100%;
+  width: fit-content;
   padding: 0;
+  max-width: 1370px;
 
 }
 
@@ -559,6 +560,14 @@ li.product-item::after {
     border: none;
   }
 
+  .table-results {
+    width: auto;
+  }
+
+  .search-container {
+    width: auto;
+  }
+
 }
 
 @media (max-width: 320px) {
@@ -591,6 +600,14 @@ li.product-item::after {
 
   .checkout:hover {
     border: none;
+  }
+
+  .table-results {
+    width: auto;
+  }
+
+  .search-container {
+    width: auto;
   }
 }
 

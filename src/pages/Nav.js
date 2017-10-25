@@ -28,7 +28,7 @@ toggleNavMenu(){
                 </ul>
                 <div className="mobile-nav">
                     <i className="fa fa-bars" aria-hidden="true" onClick={this.toggleNavMenu}></i>
-                <ul className={`mobile-links ${this.state.mobileNav ? "shiftUp" : "shiftDown"}`}>
+                <ul className={`mobile-links ${!this.state.mobileNav ? "shiftUp" : "shiftDown"}`}>
                     <li><NavLink exact to="/" onClick={this.toggleNavMenu}>HOME</NavLink></li>
                     <li><NavLink to="/products" onClick={this.toggleNavMenu}>PRODUCTS</NavLink></li>
                     <li><NavLink to="/orders" onClick={this.toggleNavMenu}>ORDERS</NavLink></li>
