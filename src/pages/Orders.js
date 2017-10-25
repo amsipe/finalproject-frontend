@@ -12,8 +12,7 @@ class Orders extends Component {
             results: {
                 orderId: null,
                 items: []
-            },
-            editModal: false
+            }
         }
         this.handleItemRemove = this.handleItemRemove.bind(this);
         this.handleOrderUpdate = this.handleOrderUpdate.bind(this);
@@ -23,6 +22,7 @@ class Orders extends Component {
     }
 
     getOrders(){
+        //push all existing orders into orders-state array
         var url = 'http://localhost:5000/orders';
         request.get(url)
         .set('accept','json')
@@ -37,6 +37,7 @@ class Orders extends Component {
       }
 
     handleOrderDelete(id){
+        //use the orderId that was searched to make a delete request
         var orderId = this.state.results.orderId;
         var url = 'http://localhost:5000/orders/' + orderId;
         request
@@ -46,7 +47,7 @@ class Orders extends Component {
             if(err){
                 throw Error(err);
             }
-            this.setState({
+            this.setState({ //clear out the results in state to update dom
                 results: {
                     orderId: null,
                     items: []
@@ -62,6 +63,7 @@ class Orders extends Component {
     }
 
     handleOrderSearch(e){
+        //pass orderId into header params for the get request
         e.preventDefault();
         var orderId = this.state.search;
         var url = 'http://localhost:5000/orders/' + orderId;
@@ -81,6 +83,7 @@ class Orders extends Component {
     }
 
     handleItemRemove(key){
+        //takes the index of the array shown in dom and filters out matched index in state
         var stateCopy = _.cloneDeep(this.state.results.items);
         stateCopy = stateCopy.filter((item,index) => index !== key)
         this.setState({
@@ -92,12 +95,14 @@ class Orders extends Component {
     }
 
     handleOrderUpdate(){
+
+        //package up updated order from state
+        //backend will handle updating correct Ids
         var itemsCopy = _.cloneDeep(this.state.results.items);
         var orderId = this.state.results.orderId;
         var newTotal = _.sumBy(itemsCopy,(item) => {
             return item.Quantity * item.Price;
         })
-        console.log(newTotal);
         var url = 'http://localhost:5000/orders/'
         request.put(url)
             .set('accept','json')
@@ -110,7 +115,7 @@ class Orders extends Component {
                 if(err){
                     throw Error(err);
                   }
-                  this.setState({
+                  this.setState({ //clear out search results if success
                     results: {
                         orderId: null,
                         items: []
@@ -120,6 +125,7 @@ class Orders extends Component {
     }
 
     handleQuantityChange(e,orderIndex){
+        //finds matched item in orders results array and updates quantity
         e.preventDefault();
         var itemsCopy = _.cloneDeep(this.state.results.items);
         itemsCopy = _.map(itemsCopy,(item,index) => {
@@ -135,25 +141,24 @@ class Orders extends Component {
                 items: itemsCopy
             }
         })
-
     }
 
     render() {
-        const orders = _.map(this.state.orders,(order,index) => {
+        const orders = _.map(this.state.orders,(order,index) => { //all orders from database
             return (
                 <tr key={order.OrderID}>
                     <td>{order.OrderID}</td>
-                    <td style={{textAlign: 'right'}}>${order.OrderTotal.toFixed(2)}</td>
+                    <td style={{textAlign: 'right',paddingRight: '5px'}}>${order.OrderTotal.toFixed(2)}</td>
                     <td>{order.CustomerID}</td>
                     <td>{order.Completed > 0 ? "Completed" : "Pending" }</td>
-                  </tr>
+                </tr>
             )
         })
-        const grossSales = _.sumBy(this.state.orders,'OrderTotal');
+        const grossSales = _.sumBy(this.state.orders,'OrderTotal'); 
         const orderTotal = _.sumBy(this.state.results.items,(item) => {
             return item.Quantity * item.Price;
         })
-        const results = _.map(this.state.results.items,(result,index) => {
+        const results = _.map(this.state.results.items,(result,index) => { //creates the results table rows
             let total = result.Price * result.Quantity
             return (
                     <tr key={index}>
@@ -161,13 +166,13 @@ class Orders extends Component {
                         <td>{result.Name}</td>
                         <td><Quantity select={result.Quantity} count={10} index={index} onChangeQuantity={this.handleQuantityChange}/></td>
                         <td>${total.toFixed(2)}</td>
-                        <td><a className="results-remove"onClick={()=>{this.handleItemRemove(index)}}>Remove</a></td>
-
+                        <td><a className="results-remove" onClick={()=>{this.handleItemRemove(index)}}>Remove</a></td>
                     </tr>    
             )
         })
         return (
-            
+            //initial items rendered are just a search box and two buttons
+            //conditional render for two potential html tables
             <div>
                 <div className="search-container">    
                     <form className="order-search">
@@ -177,7 +182,7 @@ class Orders extends Component {
                     </form>
                     <button className="get-orders-btn"onClick={this.getOrders}>Get All Orders</button>
                 </div>
-                {(this.state.results.items.length <= 0) ? null : 
+                {(this.state.results.items.length <= 0) ? null : //conditional render if results > 0
                 <div className="table-results">
                     <table>
                         <thead>
@@ -204,7 +209,7 @@ class Orders extends Component {
                     </div>
                 </div>   
                 }
-                {orders.length <= 0 ?
+                {orders.length <= 0 ? //checks if any orders are in the state.orders array
                     null
                     :
                     <div className="table-results">
@@ -229,7 +234,6 @@ class Orders extends Component {
                     </div>                
                 } 
             </div>
-
         )
     }
 }

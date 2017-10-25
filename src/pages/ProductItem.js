@@ -3,6 +3,7 @@ import Modal from 'react-modal';
 // import request from 'superagent';
 // import _ from 'lodash';
 import './main.css';
+import modalStyles from '../utils/ModalStyles'
 
 import Quantity from './Quantity';
 
@@ -45,10 +46,6 @@ class ProductItem extends Component {
       })
     }
 
-
-    // componentDidUpdate(){
-    //   console.log('hotdog')
-    // }
     render(){
       return (
         <li className="product-item">
@@ -71,7 +68,7 @@ class ProductItem extends Component {
           contentLabel="Product Details"
           onRequestClose={()=>{this.toggleDetailModal();this.toggleEditForm();}}
           shouldCloseOnOverlayClick={true}
-          closeTimeoutMS={200}
+          closeTimeoutMS={100}
           style={modalStyles}>
             <EditForm 
             product={this.props.product} 
@@ -135,32 +132,32 @@ class ProductItem extends Component {
       )
   };
 
-//TODO: move to external file
-const modalStyles = {
-    content : {
-        top                   : '20%',
-        left                  : '10%',
-        right                 : '10%',
-        bottom                : 'auto',
-        minWidth              : '10%',
-        maxWidth              : '500px',
-        margin                : '20px auto 20px auto',
-        padding               : '10px',
-        overflow              : 'auto',
-        height                : '500px',
-        WebkitOverflowScrolling: 'touch'
+// //TODO: move to external file
+// const modalStyles = {
+//     content : {
+//         top                   : '20%',
+//         left                  : '10%',
+//         right                 : '10%',
+//         bottom                : 'auto',
+//         minWidth              : '10%',
+//         maxWidth              : '500px',
+//         margin                : '20px auto 20px auto',
+//         padding               : '10px',
+//         overflow              : 'auto',
+//         height                : '500px',
+//         WebkitOverflowScrolling: 'touch'
 
-        // transition            : 'transform 1000ms',
-        // transform             : 'translate(-50%, -50%)'
-    },
-    overlay : {
-        position          : 'fixed',
-        top               : 0,
-        left              : 0,
-        right             : 0,
-        bottom            : 0,
-        backgroundColor   : 'rgba(0, 0, 0, 0.45)'
-    },
-    };
+//         // transition            : 'transform 1000ms',
+//         // transform             : 'translate(-50%, -50%)'
+//     },
+//     overlay : {
+//         position          : 'fixed',
+//         top               : 0,
+//         left              : 0,
+//         right             : 0,
+//         bottom            : 0,
+//         backgroundColor   : 'rgba(0, 0, 0, 0.45)'
+//     },
+//     };
 
   export default ProductItem;

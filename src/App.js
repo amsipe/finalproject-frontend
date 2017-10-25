@@ -8,6 +8,7 @@ import Products from './pages/Products';
 import Orders from './pages/Orders';
 import Nav from './pages/Nav';
 import Home from './pages/Home';
+import modalStyles from './utils/ModalStyles';
 
 
 class App extends Component {
@@ -35,7 +36,8 @@ class App extends Component {
         categoryId: 'Select...'
       },
       categories: [],
-      cartOpen: false
+      cartOpen: false,
+      newProductOpen: false
       
     }
     this.getProducts = this.getProducts.bind(this);
@@ -47,6 +49,7 @@ class App extends Component {
     this.handleEditChange = this.handleEditChange.bind(this);
     this.handleEditSubmit = this.handleEditSubmit.bind(this);
     this.toggleCartOpen = this.toggleCartOpen.bind(this);
+    this.toggleNewProductOpen = this.toggleNewProductOpen.bind(this);
 
    
   }
@@ -92,6 +95,12 @@ class App extends Component {
         });
         console.log(this.state.products);
       });
+  }
+  toggleNewProductOpen(){
+    console.log('hotdog')
+    this.setState({
+      newProductOpen: !this.state.newProductOpen
+    })
   }
 
   toggleCartOpen(){
@@ -175,6 +184,7 @@ class App extends Component {
   }
 
   handleNewProductSubmit(e){
+    console.log(e);
     e.preventDefault();
     var newProductCopy = _.cloneDeep(this.state.newProduct);
     var url = 'http://localhost:5000/products';
@@ -234,38 +244,67 @@ class App extends Component {
   }
 
   render () {
-    
+    const categories = _.map(this.state.categories,(category,index) => {
+      return (
+        <option key={index} value={category.CategoryID}>{_.capitalize(category.Category)}</option>
+      )
+    })
+
    return (
      <BrowserRouter>
       <div>
+        <div>
         <Nav cart={this.state.cart} toggleCartOpen={this.toggleCartOpen} />
         <Route exact path="/" component={Home}/>
         <Route path="/products" render={() => <Products 
         products={this.state.products} 
-        cart={this.state.cart}
         addCart={this.handleCartAdd}
-        orderSubmit={this.handleOrderSubmit}
         onChangeQuantity={this.handleQuantityChange}
-        onChangeNewProduct={this.handleNewProductChange}
-        categories={this.state.categories}
-        productForm={this.state.newProduct}
-        onNewProductSubmit={this.handleNewProductSubmit}
         onEditChange={this.handleEditChange}
         editProduct={this.state.editProduct}
         onEditSubmit={this.handleEditSubmit}
+        categories={this.state.categories}
         />}/>
         <Route path="/orders" component={Orders}/>
+        <Footer toggleNewProductOpen={this.toggleNewProductOpen}/>
         <Modal 
-        isOpen={this.state.cartOpen}
-        contentLabel="Shopping Cart"
-        onRequestClose={this.toggleModal}
-        shouldCloseOnOverlayClick={true}
+          isOpen={this.state.cartOpen}
+          contentLabel="Shopping Cart"
+          onRequestClose={this.toggleModal}
+          shouldCloseOnOverlayClick={true}
+          closeTimeoutMS={100}
+          style={modalStyles}
+          >
+          <ShoppingCart cart={this.state.cart} toggleCartOpen={this.toggleCartOpen} orderSubmit={this.handleOrderSubmit}/>
+        </Modal>
+        <Modal 
+        isOpen={this.state.newProductOpen}
+        contentLabel="Add New Product Form"
+        onRequestClose={()=> {this.toggleNewProductOpen()}}
+        shouldCloseOnOverlayClick={false}
         closeTimeoutMS={100}
         style={modalStyles}
         >
-        <ShoppingCart cart={this.state.cart} toggleCartOpen={this.toggleCartOpen} orderSubmit={this.handleOrderSubmit}/>
-
+          <button className="modalClose"onClick={()=>{this.toggleNewProductOpen()}}>Close</button>
+          <form className="addProduct-form"onSubmit={this.handleNewProductSubmit} onChange={this.handleNewProductChange}>
+            <p>Please enter product details:</p>
+            <label htmlFor="productName" className="newProduct-label">Name:</label>
+            <input type="text" name="productName" value={this.state.newProduct.productName} />
+            <label htmlFor="imgUrl" className="newProduct-label">Image Name:</label>
+            <input type="text" name="imgUrl" value={this.state.newProduct.imgUrl}/>
+            <label htmlFor="price" className="newProduct-label">Price:</label>
+            <input type="text" name="price" value={this.state.newProduct.price}/>
+            <label htmlFor="categoryId" className="newProduct-label">Category:</label>
+            <select name="categoryId" defaultValue={this.state.newProduct.categoryId} onChange={this.handleNewProductChange}>
+              {categories}
+            </select>
+            <label htmlFor="description" className="newProduct-label">Description:</label>
+            <textarea type="text" name="description"  value={this.state.newProduct.description}/>
+            
+            <button className="add-product-confirm">Add Product</button>
+          </form>  
         </Modal>
+        </div>
       </div>
      </BrowserRouter>
    )
@@ -287,7 +326,7 @@ const ShoppingCart = (props) => {
               </tr>    
       )
     })
-    console.log(items.length);
+
   return (
     <div>
       <button className="modalClose" onClick={() => {props.toggleCartOpen()}}>Close</button>
@@ -320,27 +359,35 @@ const ShoppingCart = (props) => {
   )
 }
 
-const modalStyles = {
-  content : {
-    top                   : '20%',
-    left                  : '10%',
-    right                 : '10%',
-    bottom                : '10%',
-    minWidth              : '10%',
-    maxWidth              : '500px',
-    margin                : '20px auto 20px auto',
-    padding               : '10px',
-    overflow              : 'scroll'
+// const modalStyles = {
+//   content : {
+//     top                   : '20%',
+//     left                  : '10%',
+//     right                 : '10%',
+//     bottom                : '10%',
+//     minWidth              : '10%',
+//     maxWidth              : '500px',
+//     margin                : '20px auto 20px auto',
+//     padding               : '10px',
+//     overflow              : 'scroll'
+//   },
+//   overlay : {
+//     position          : 'fixed',
+//     top               : 0,
+//     left              : 0,
+//     right             : 0,
+//     bottom            : 0,
+//     backgroundColor   : 'rgba(0, 0, 0, 0.45)'
+//   },
+// };
 
-    // transition            : 'transform 1000ms',
-    // transform             : 'translate(-50%, -50%)'
-  },
-  overlay : {
-    position          : 'fixed',
-    top               : 0,
-    left              : 0,
-    right             : 0,
-    bottom            : 0,
-    backgroundColor   : 'rgba(0, 0, 0, 0.45)'
-  },
-};
+const Footer = (props) => {
+  return (
+    <div>
+      <footer>
+        <span>&copy; Anderson Sipe {(new Date().getFullYear())}</span>
+        <span className="footer-link" onClick={()=>{props.toggleNewProductOpen()}}>Admin</span>
+      </footer>
+    </div>
+  )
+}
