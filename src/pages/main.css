@@ -2,9 +2,10 @@ body {
   font-family: 'Roboto', serif;
   /* background-color: #555555; */
   background-color: #30302C;
-  /* background-image: url('./icons/nebula1.png'); */
+  background-image: url('../img/ITAProjectBackground.png');
   background-attachment: fixed;
-
+  /* background-repeat: repeat-y; */
+  background-size: cover;
   height: 100%;
   margin: 0;
   padding: 0;
@@ -47,10 +48,6 @@ button {
   cursor: pointer;
   font-family: 'Lato';
 
-  /* background: #7d7e7d; 
-  background: -moz-linear-gradient(top, #7d7e7d 0%, #0e0e0e 53%); 
-  background: -webkit-linear-gradient(top, #7d7e7d 0%,#0e0e0e 53%); 
-  background: linear-gradient(to bottom, #7d7e7d 0%,#0e0e0e 53%); */
 }
 
 /***** Mobile Nav ******/
@@ -180,15 +177,15 @@ ul.main-nav {
 .products-container {
   margin: 0 auto;
   display: block;
-  max-width: 1370px;
+  max-width: 1200px;
 }
 ul.product-list {
   list-style-type: none;
   margin: 10px auto;
   display: block;
-  
+  width: 100%;
   padding: 0;
-  max-width: 1370px;
+
 
 }
 
@@ -199,7 +196,7 @@ li.product-item {
   border-radius: 5px;
   display: inline-block;
   min-width: 350px;
-  margin: 15px 15px;
+  margin: 15px 25px;
   /* width: 25%; */
 	height: auto;
   text-align: center;
@@ -209,12 +206,12 @@ li.product-item {
   box-shadow: 0px 8px 23px -2px rgba(0,0,0,0.75);
 }
 
-li.product-item::after {
+/* li.product-item::after {
   content: '';
   display: block;
   width: 100%;
   clear: both;
-}
+} */
 
 /* li.product-item:nth-child(3n+1) {
   clear: left;
@@ -506,28 +503,34 @@ li.product-item::after {
   }
 } */
 
-@media (max-width: 960px) and (min-width: 501px) {
-  /* ul.product-list {
-    margin: 0 4%;
+@media (max-width: 1320px) and (min-width: 961px) {
+  .products-container {
+
+    max-width: 800px;
+  }
+
+  /* .ReactModal__Content--after--open {
+    height: auto;
+    bottom: auto;
   } */
+
+}
+
+@media (max-width: 960px) and (min-width: 830px) {
+  .products-container {
+    max-width: 800px;
+  }
 
   .mobile-nav {
     display: block;
   }
   ul.main-nav {
     display: none;
-  }
-
-  li.product-item {
-
-    width: 42%;
-    margin: 15px 2%; 
-    min-width: 350px;
   }
 
 }
 
-@media (max-width: 500px) {
+@media (max-width: 829px) {
   .mobile-nav {
     display: block;
   }
@@ -535,11 +538,15 @@ li.product-item::after {
     display: none;
   }
 
+  .products-container {
+    max-width: 680px;
+  }
   li.product-item {
-    width: 325px;
-    display: block;
-    height: auto;
-    margin: 45px auto;
+    min-width: 300px;
+    margin: 15px 20px;
+  }
+  li.product-item img {
+    height: 150px;
   }
 
   .cart {
@@ -576,7 +583,39 @@ li.product-item::after {
 
 }
 
-@media (max-width: 320px) {
+@media (max-width: 700px) {
+  .products-container {
+    max-width: 340px;
+  }
+}
+
+@media (max-width: 619px) {
+  .product-details-wrapper img {
+    float: none;
+    display: block;
+    margin: 0 auto;
+    height: 150px;
+  }
+
+  .product-details-wrapper .product-name,.product-details-wrapper .product-price  {
+    display: inline-block;
+    margin: 10px 0 0 0;
+    padding: 0;
+  }
+
+  .product-name::after {
+    content: ':';
+    padding-right: 8px;
+  }
+
+  .ReactModal__Content--after-open {
+    top: 10% !important;
+    left: 10% !important;
+    right: 10% !important;
+}
+}
+
+@media (max-width: 360px) {
   li.product-item {
     width: 100%;
     display: block;
@@ -584,9 +623,26 @@ li.product-item::after {
     margin: 20px auto;
     border-radius: 0px;
   }
+
+  li.product-item::after {
+    content: '';
+    display: block;
+    clear: both;
+  }
+
+  .product-name, .product-price {
+    display: inline-block;
+    margin-bottom: 8px;
+    padding: 0 10px;
+  }
+
+  .product-name::after {
+    content: ':'
+  }
+
   .cart {
     font-size: .85em;
-    padding-right: 15px;
+    padding: 0;
     /* display: inline-block; */
     width: 100%;
     height: 45px;
@@ -596,8 +652,9 @@ li.product-item::after {
   .cart span, .checkout {
     width: auto;
     margin: 0;
-    padding: 0 10px;
     border: none;
+    padding: 0 8px 0 0;
+    
   }
 
   .checkout {
@@ -614,6 +671,16 @@ li.product-item::after {
 
   .search-container {
     width: auto;
+  }
+
+  .ReactModal__Content--after-open {
+    top: 10% !important;
+    left: 2% !important;
+    right: 2% !important;
+}
+
+  .product-details-wrapper img {
+    height: 150px;
   }
 }
 

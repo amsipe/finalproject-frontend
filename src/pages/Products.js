@@ -40,6 +40,7 @@ class Products extends Component {
         contentLabel="Add New Product Form"
         onRequestClose={()=> {this.toggleModal()}}
         shouldCloseOnOverlayClick={false}
+        closeTimeoutMS={200}
         style={modalStyles}
         >
           <button className="modalClose"onClick={()=>{this.toggleModal()}}>Close</button>

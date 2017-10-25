@@ -260,6 +260,7 @@ class App extends Component {
         contentLabel="Shopping Cart"
         onRequestClose={this.toggleModal}
         shouldCloseOnOverlayClick={true}
+        closeTimeoutMS={100}
         style={modalStyles}
         >
         <ShoppingCart cart={this.state.cart} toggleCartOpen={this.toggleCartOpen} orderSubmit={this.handleOrderSubmit}/>
@@ -329,7 +330,7 @@ const modalStyles = {
     maxWidth              : '500px',
     margin                : '20px auto 20px auto',
     padding               : '10px',
-    overflow              : 'none'
+    overflow              : 'scroll'
 
     // transition            : 'transform 1000ms',
     // transform             : 'translate(-50%, -50%)'

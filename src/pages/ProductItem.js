@@ -71,6 +71,7 @@ class ProductItem extends Component {
           contentLabel="Product Details"
           onRequestClose={()=>{this.toggleDetailModal();this.toggleEditForm();}}
           shouldCloseOnOverlayClick={true}
+          closeTimeoutMS={200}
           style={modalStyles}>
             <EditForm 
             product={this.props.product} 
@@ -140,12 +141,14 @@ const modalStyles = {
         top                   : '20%',
         left                  : '10%',
         right                 : '10%',
-        bottom                : '10%',
+        bottom                : 'auto',
         minWidth              : '10%',
         maxWidth              : '500px',
         margin                : '20px auto 20px auto',
         padding               : '10px',
-        overflow              : 'none'
+        overflow              : 'auto',
+        height                : '500px',
+        WebkitOverflowScrolling: 'touch'
 
         // transition            : 'transform 1000ms',
         // transform             : 'translate(-50%, -50%)'
