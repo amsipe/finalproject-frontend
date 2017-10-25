@@ -50,6 +50,11 @@ button {
 
 }
 
+.ReactModal__Content--after-open::-webkit-scrollbar {
+  display: none;
+}
+
+
 /***** Mobile Nav ******/
 
 .fa.fa-bars {
