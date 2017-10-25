@@ -33,7 +33,7 @@ class Products extends Component {
     })
     //TODO: fix not having placeholder in select dropdown
     return (
-      <div>
+      <div className="products-container">
         <button className="add-product-button"onClick={() => {this.toggleModal()}}>Add New Product</button>
         <Modal 
         isOpen={this.state.modalOpen}
