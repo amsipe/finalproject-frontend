@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import request from 'superagent';
 import _ from 'lodash';
-// import './App.css';
+import './App.css';
 import {BrowserRouter, Route} from 'react-router-dom'
 import Modal from 'react-modal';
-import Products from './pages/Products';
-import Orders from './pages/Orders';
-import Nav from './pages/Nav';
-import Home from './pages/Home';
+import Products from './components/Products';
+import Orders from './components/Orders';
+import Nav from './components/Nav';
+import Home from './components/Home';
 import modalStyles from './utils/ModalStyles';
 
 
@@ -15,29 +15,28 @@ class App extends Component {
   constructor(props){
     super(props);
     this.state = {
-      products: [],
-      orders: [],
-      cart: {
+      products: [], //populated from db query
+      cart: { //holds global cart state
         total: 0,
         customerID: null,
         items: []
       },
-      newProduct: {
+      newProduct: { //holds typed data from new product form
         productName: '',
         imgUrl: '',
         price: '',
         description: '',
         categoryId: 'Select...'
       },
-      editProduct: {
+      editedProduct: { //holds typed data from edit product form
         productName: '',
         price: '',
         description: '',
         categoryId: 'Select...'
       },
-      categories: [],
-      cartOpen: false,
-      newProductOpen: false
+      categories: [], 
+      cartOpen: false, //toggles modal on/off
+      newProductOpen: false //toggles modal on/off
       
     }
     this.getProducts = this.getProducts.bind(this);
@@ -55,14 +54,11 @@ class App extends Component {
   }
 
   componentWillMount(){
+    //async fix for db query
     this.getProducts();
     this.getCategories();
 
   }  
-
-  // componentWillUpdate(){
-  //   this.getProducts();
-  // }
 
   getCategories(){
     var url = 'http://localhost:5000/categories'
@@ -77,6 +73,7 @@ class App extends Component {
         });
       });
   }
+
   getProducts(){
     var url = 'http://localhost:5000/products'
     request.get(url)
@@ -86,18 +83,17 @@ class App extends Component {
           throw Error(err);
         }
         var products = _.map(JSON.parse(res.text),(product) => {
-          product.Quantity = 1;
-          product.InCart = false;
+          product.Quantity = 1; 
+          product.InCart = false; //turns off in cart state when getting products back
           return product;
         });
         this.setState({
           products
         });
-        console.log(this.state.products);
       });
   }
+
   toggleNewProductOpen(){
-    console.log('hotdog')
     this.setState({
       newProductOpen: !this.state.newProductOpen
     })
@@ -110,7 +106,7 @@ class App extends Component {
 }
 
   handleOrderSubmit(){
-    //TODO: replace send object with cart state
+    
     var cartCopy = _.cloneDeep(this.state.cart);
     var url = 'http://localhost:5000/orders';
     request
@@ -133,12 +129,13 @@ class App extends Component {
             items: []
           }
         })
-        this.getProducts();
+        this.getProducts(); //calling getProducts sets "inCart" state to false on submit
 
       })
   }
 
   handleCartAdd(product,adding){
+    //toggles adding/removing product to cart based on state of "inCart"
     product.InCart = !product.InCart;
     var cartCopy = _.cloneDeep(this.state.cart);
     if(adding){
@@ -148,24 +145,23 @@ class App extends Component {
         return item.ProductID !== product.ProductID;
       })
     }
-    //TODO: replace random number for customerID with better process
-    //random number is assigned to customer if not assigned 
+    //random number is assigned to customer if not already assigned 
     cartCopy.customerID = (!cartCopy.customerID) ? _.random(1,10) : cartCopy.customerID;
-    cartCopy.total = _.sumBy(cartCopy.items, (item) => {
-      return item.Quantity * item.Price;
+    //calculates cart total based on num of items and quantity of each in cart array
+    cartCopy.total = _.sumBy(cartCopy.items, (item) => { 
+      return item.Quantity * item.Price; 
     })
     this.setState({
       cart: cartCopy
     })
-
-
   }
 
   handleQuantityChange(e,productIndex){
     var productsCopy = _.cloneDeep(this.state.products);
+    //TODO: replace map loop with stop on match lookup to save on resources
     productsCopy = _.map(productsCopy,(product,index) => {
         if(index === productIndex){
-            product.Quantity = parseInt(e.target.value,10);
+            product.Quantity = parseInt(e.target.value,10);//converts dom string value
             return product;       
         }
         return product;
@@ -177,14 +173,13 @@ class App extends Component {
 
   handleNewProductChange(e){
     const newProduct = _.cloneDeep(this.state.newProduct);
-    newProduct[e.target.name] = e.target.value;
+    newProduct[e.target.name] = e.target.value; //looks for newProduct state property based on html element name
     this.setState({
       newProduct
     })
   }
 
   handleNewProductSubmit(e){
-    console.log(e);
     e.preventDefault();
     var newProductCopy = _.cloneDeep(this.state.newProduct);
     var url = 'http://localhost:5000/products';
@@ -210,40 +205,40 @@ class App extends Component {
   }
 
   handleEditChange(e){
-    e.preventDefault();
-    const editProduct = _.cloneDeep(this.state.editProduct);
-    editProduct[e.target.name] = e.target.value || e.target.placeholder;
+    const editedProduct = _.cloneDeep(this.state.editedProduct);
+    editedProduct[e.target.name] = e.target.value;
     this.setState({
-      editProduct
+      editedProduct
     })
   }
 
   handleEditSubmit(e,productId){
     e.preventDefault();
-    var editProductCopy = _.cloneDeep(this.state.editProduct);
-    editProductCopy.productId = productId; 
+    var editedProductCopy = _.cloneDeep(this.state.editedProduct);
+    editedProductCopy.productId = productId; //adding productId property as it's not stored in edit state
     var url = 'http://localhost:5000/products';
     request
       .put(url)
-      .send(editProductCopy)
+      .send(editedProductCopy)
       .set('accept','json')
       .end((err,res) => {
         if(err){
           throw Error(err);
         }
         this.setState({
-          editProduct: {
+          editedProduct: {
             productName: '',
             price: '',
             description: '',
             categoryId: 'Select...'
           }
         })
-        this.getProducts();
+        this.getProducts(); //forces new data to be read from db
       })
   }
 
   render () {
+    //categories for select dropdowns
     const categories = _.map(this.state.categories,(category,index) => {
       return (
         <option key={index} value={category.CategoryID}>{_.capitalize(category.Category)}</option>
@@ -251,41 +246,42 @@ class App extends Component {
     })
 
    return (
+      //main component structure
+      //modals are passed in but are only rendered based on state 
      <BrowserRouter>
       <div>
-        <div>
         <Nav cart={this.state.cart} toggleCartOpen={this.toggleCartOpen} />
         <Route exact path="/" component={Home}/>
-        <Route path="/products" render={() => <Products 
+        <Route path="/products" render={() => <Products //func is used to allow for props to be passed
         products={this.state.products} 
         addCart={this.handleCartAdd}
         onChangeQuantity={this.handleQuantityChange}
         onEditChange={this.handleEditChange}
-        editProduct={this.state.editProduct}
+        editedProduct={this.state.editedProduct}
         onEditSubmit={this.handleEditSubmit}
         categories={this.state.categories}
         />}/>
         <Route path="/orders" component={Orders}/>
         <Footer toggleNewProductOpen={this.toggleNewProductOpen}/>
-        <Modal 
+        <Modal //shopping cart modal
           isOpen={this.state.cartOpen}
-          contentLabel="Shopping Cart"
-          onRequestClose={this.toggleModal}
+          contentLabel="Shopping Cart" //screen readers
+          onRequestClose={this.toggleCartOpen}
           shouldCloseOnOverlayClick={true}
           closeTimeoutMS={100}
           style={modalStyles}
           >
           <ShoppingCart cart={this.state.cart} toggleCartOpen={this.toggleCartOpen} orderSubmit={this.handleOrderSubmit}/>
         </Modal>
-        <Modal 
+        <Modal //add new product modal
         isOpen={this.state.newProductOpen}
-        contentLabel="Add New Product Form"
-        onRequestClose={()=> {this.toggleNewProductOpen()}}
-        shouldCloseOnOverlayClick={false}
+        contentLabel="Add New Product Form" //screen readers
+        onRequestClose={this.toggleNewProductOpen}
+        shouldCloseOnOverlayClick={true}
         closeTimeoutMS={100}
         style={modalStyles}
         >
-          <button className="modalClose"onClick={()=>{this.toggleNewProductOpen()}}>Close</button>
+          <button className="modalClose" onClick={this.toggleNewProductOpen}>Close</button>
           <form className="addProduct-form"onSubmit={this.handleNewProductSubmit} onChange={this.handleNewProductChange}>
             <p>Please enter product details:</p>
             <label htmlFor="productName" className="newProduct-label">Name:</label>
@@ -300,11 +296,9 @@ class App extends Component {
             </select>
             <label htmlFor="description" className="newProduct-label">Description:</label>
             <textarea type="text" name="description"  value={this.state.newProduct.description}/>
-            
             <button className="add-product-confirm">Add Product</button>
           </form>  
         </Modal>
-        </div>
       </div>
      </BrowserRouter>
    )
@@ -313,8 +307,11 @@ class App extends Component {
 
 export default App;
 
+//func component to just return a table 
 const ShoppingCart = (props) => {
   //TODO: add method to change the count of a product from cart
+
+  //get a collection of table rows based on cart state
   const items = _.map(props.cart.items,(item,index) => {
     let total = item.Price * item.Quantity
       return (
@@ -322,7 +319,6 @@ const ShoppingCart = (props) => {
                   <td>{item.Name}</td>
                   <td>{item.Quantity}</td>
                   <td>${total.toFixed(2)}</td>
-                  
               </tr>    
       )
     })
@@ -331,7 +327,7 @@ const ShoppingCart = (props) => {
     <div>
       <button className="modalClose" onClick={() => {props.toggleCartOpen()}}>Close</button>
       <div className="table-results">
-        {items.length <= 0 ? 
+        {items.length <= 0 ? //only return a table if cart isn't empty
           <p>--- Cart is Empty ---</p>
           :  
           <table>
@@ -359,34 +355,12 @@ const ShoppingCart = (props) => {
   )
 }
 
-// const modalStyles = {
-//   content : {
-//     top                   : '20%',
-//     left                  : '10%',
-//     right                 : '10%',
-//     bottom                : '10%',
-//     minWidth              : '10%',
-//     maxWidth              : '500px',
-//     margin                : '20px auto 20px auto',
-//     padding               : '10px',
-//     overflow              : 'scroll'
-//   },
-//   overlay : {
-//     position          : 'fixed',
-//     top               : 0,
-//     left              : 0,
-//     right             : 0,
-//     bottom            : 0,
-//     backgroundColor   : 'rgba(0, 0, 0, 0.45)'
-//   },
-// };
-
 const Footer = (props) => {
   return (
     <div>
       <footer>
         <span>&copy; Anderson Sipe {(new Date().getFullYear())}</span>
-        <span className="footer-link" onClick={()=>{props.toggleNewProductOpen()}}>Admin</span>
+        <span className="footer-link" onClick={() => {props.toggleNewProductOpen()}}>Admin</span>
       </footer>
     </div>
   )

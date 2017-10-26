@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
 import Modal from 'react-modal';
-// import request from 'superagent';
-// import _ from 'lodash';
-import './main.css';
 import modalStyles from '../utils/ModalStyles'
 
 import Quantity from './Quantity';
@@ -10,10 +7,10 @@ import Quantity from './Quantity';
 class ProductItem extends Component {
     constructor(props){
       super(props);
-      this.state = {
+      this.state = { //state exists here to just toggle modals and button css
         detailModal: false, //handles showing the details modal
         editModal: false, //handles showing the edit form in details modal
-        addToCart: true //handles showing which css class to show
+        addToCart: true //handles showing which css class on the cart buttons
       }
 
       this.toggleEditForm = this.toggleEditForm.bind(this);
@@ -58,28 +55,34 @@ class ProductItem extends Component {
             <Quantity select={this.props.product.Quantity} count={10} onChangeQuantity={this.props.onChangeQuantity} index={this.props.index}/>
             <button 
             className={!this.props.product.InCart ? "add-cart-button border-grow" : "remove-cart-button border-grow"}
-            onClick={() => {this.props.onCartAdd(this.props.product,!this.props.product.InCart); this.toggleCartMethod();}}>
+            onClick={() => {
+                  this.props.onCartAdd(this.props.product,!this.props.product.InCart);
+                  this.toggleCartMethod();
+                }
+              }>
             {!this.props.product.InCart ? "ADD TO CART" : "REMOVE"}
             </button>
           </div>
           
           <Modal           
           isOpen={this.state.detailModal}
-          contentLabel="Product Details"
-          onRequestClose={()=>{this.toggleDetailModal();this.toggleEditForm();}}
+          contentLabel="Product Details" //screen readers
+          onRequestClose={()=>{this.toggleDetailModal(); this.toggleEditForm();}}
           shouldCloseOnOverlayClick={true}
           closeTimeoutMS={100}
           style={modalStyles}>
-            <EditForm 
+            <ProductDetails 
             product={this.props.product} 
             categories={this.props.categories} 
-            onEditChange={this.props.onEditChange} 
-            editProduct={this.props.editProduct}
-            onEditSubmit={this.props.onEditSubmit}
             onClose={this.toggleDetailModal}
+
+            //edit form props
+            showEdit={this.state.editModal}
+            editedProduct={this.props.editedProduct}
+            onEditChange={this.props.onEditChange} 
+            onEditSubmit={this.props.onEditSubmit}
             toggleEditForm={this.toggleEditForm}
             closeEditForm={this.handleEditFormClose}
-            showEdit={this.state.editModal}
             /> 
           </Modal>
         </li>
@@ -87,9 +90,9 @@ class ProductItem extends Component {
     }
   }
 
-  const EditForm = (props) => {
-      //TODO: rename edit form since it's now a child of details view. look at function names too.
-      //TODO: find a way to make the values already populate in form fields.
+  const ProductDetails = (props) => {
+
+      //TODO: find a way to make the values already populate in edit form fields.
       return (
         <div>
           <button className="modalClose" onClick={()=>{props.onClose(); props.closeEditForm();}}>Close</button>
@@ -109,17 +112,17 @@ class ProductItem extends Component {
               <p>Update details:</p>
               <div className="edit-container-left">
                 <label htmlFor="productName">Name</label>
-                <input type="text" name="productName" value={props.editProduct.productName} onChange={(e) => {props.onEditChange(e)}}/>
+                <input type="text" name="productName" value={props.editedProduct.productName} onChange={(e) => {props.onEditChange(e)}}/>
                 <label htmlFor="price">Price</label>
-                <input type="text" name="price" value={props.editProduct.price} onChange={(e) => {props.onEditChange(e)}}/>
+                <input type="text" name="price" value={props.editedProduct.price} onChange={(e) => {props.onEditChange(e)}}/>
               </div>
               <div className="edit-container-right">
                 <label htmlFor="description">Description</label>
-                <textarea type="text" name="description" rows="6" value={props.editProduct.description} onChange={(e) => {props.onEditChange(e)}}/>
+                <textarea type="text" name="description" rows="6" value={props.editedProduct.description} onChange={(e) => {props.onEditChange(e)}}/>
               </div>
               <div className="edit-container-left">
                 <label htmlFor="categoryId">Category</label>
-                <select name="categoryId" value={props.editProduct.categoryId} onChange={(e) => {props.onEditChange(e)}}>
+                <select name="categoryId" value={props.editedProduct.categoryId} onChange={(e) => {props.onEditChange(e)}}>
                   {props.categories}
                 </select>  
               </div>  
@@ -132,32 +135,5 @@ class ProductItem extends Component {
       )
   };
 
-// //TODO: move to external file
-// const modalStyles = {
-//     content : {
-//         top                   : '20%',
-//         left                  : '10%',
-//         right                 : '10%',
-//         bottom                : 'auto',
-//         minWidth              : '10%',
-//         maxWidth              : '500px',
-//         margin                : '20px auto 20px auto',
-//         padding               : '10px',
-//         overflow              : 'auto',
-//         height                : '500px',
-//         WebkitOverflowScrolling: 'touch'
-
-//         // transition            : 'transform 1000ms',
-//         // transform             : 'translate(-50%, -50%)'
-//     },
-//     overlay : {
-//         position          : 'fixed',
-//         top               : 0,
-//         left              : 0,
-//         right             : 0,
-//         bottom            : 0,
-//         backgroundColor   : 'rgba(0, 0, 0, 0.45)'
-//     },
-//     };
 
   export default ProductItem;

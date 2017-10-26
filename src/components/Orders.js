@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import request from 'superagent';
 import _ from 'lodash';
-import './main.css';
+
+import Quantity from './Quantity';
 
 class Orders extends Component {
     constructor(props){
         super(props);
-        this.state = {
+        this.state = { //orders page controls it's own state since it doesn't need to interact with global state
             orders: [],
             search: null,
             results: {
@@ -63,7 +64,7 @@ class Orders extends Component {
     }
 
     handleOrderSearch(e){
-        //pass orderId into header params for the get request
+        //pass orderId into params for the get request
         e.preventDefault();
         var orderId = this.state.search;
         var url = 'http://localhost:5000/orders/' + orderId;
@@ -83,7 +84,7 @@ class Orders extends Component {
     }
 
     handleItemRemove(key){
-        //takes the index of the array shown in dom and filters out matched index in state
+        //takes the index of the array shown in html and filters out matched index in state
         var stateCopy = _.cloneDeep(this.state.results.items);
         stateCopy = stateCopy.filter((item,index) => index !== key)
         this.setState({
@@ -170,10 +171,11 @@ class Orders extends Component {
                     </tr>    
             )
         })
+
         return (
             //initial items rendered are just a search box and two buttons
             //conditional render for two potential html tables
-            <div>
+            <div className="ordersPage-container">
                 <div className="search-container">    
                     <form className="order-search">
                         <input type="text" name="searchOrder" placeholder="Search OrderID"onChange={this.handleSearchChange.bind(this)}/>
@@ -240,16 +242,3 @@ class Orders extends Component {
 
 export default Orders;
 
-const Quantity = (props) => {
-    const options = [];
-    for(var i =1; i<=props.count;i++){
-        
-        options.push(<option key={i} value={i}>{i}</option>)
-    }
-    
-    return (
-        <select value={props.select} onChange={(e)=> {props.onChangeQuantity(e,props.index)}}>
-            {options}
-        </select>
-    );
-}

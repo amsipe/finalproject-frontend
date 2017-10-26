@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {NavLink} from 'react-router-dom';
 import '../../node_modules/font-awesome/css/font-awesome.min.css'; 
-import './main.css';
 
 class Nav extends Component {
     constructor(){

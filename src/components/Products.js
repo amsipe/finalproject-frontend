@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
-import './main.css';
 import ProductItem from './ProductItem';
 
 
@@ -13,11 +12,12 @@ class Products extends Component {
         <option key={index} value={category.CategoryID}>{_.capitalize(category.Category)}</option>
       )
     })
-    console.log(categories);
+
     //TODO: fix not having placeholder in select dropdown
     return (
       <div className="products-container">
-        <ul className="product-list">{this.props.products.map((product,index) => {
+        <ul className="product-list">
+        {this.props.products.map((product,index) => {
           return (
             <ProductItem 
               key={product.ProductID} 
@@ -27,7 +27,7 @@ class Products extends Component {
               index={index}
               categories={categories}
               onEditChange={this.props.onEditChange}
-              editProduct={this.props.editProduct}
+              editedProduct={this.props.editedProduct}
               onEditSubmit={this.props.onEditSubmit}
             />
           )
