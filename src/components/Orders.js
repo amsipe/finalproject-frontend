@@ -3,7 +3,7 @@ import request from 'superagent';
 import _ from 'lodash';
 
 import Quantity from './Quantity';
-
+const herokuUrl = 'https://radiant-ocean-22273.herokuapp.com'
 class Orders extends Component {
     constructor(props){
         super(props);
@@ -24,7 +24,7 @@ class Orders extends Component {
 
     getOrders(){
         //push all existing orders into orders-state array
-        var url = 'http://localhost:5000/orders';
+        var url = `${herokuUrl}/orders`;
         request.get(url)
         .set('accept','json')
         .end((err,res) => {
@@ -40,7 +40,7 @@ class Orders extends Component {
     handleOrderDelete(id){
         //use the orderId that was searched to make a delete request
         var orderId = this.state.results.orderId;
-        var url = 'http://localhost:5000/orders/' + orderId;
+        var url = `${herokuUrl}/orders/${orderId}`;
         request
             .del(url)
             .set('accept','json')
@@ -67,7 +67,7 @@ class Orders extends Component {
         //pass orderId into params for the get request
         e.preventDefault();
         var orderId = this.state.search;
-        var url = 'http://localhost:5000/orders/' + orderId;
+        var url = `${herokuUrl}/orders/${orderId}`;
         request.get(url)
         .set('accept','json')
         .end((err,res) => {
@@ -104,7 +104,7 @@ class Orders extends Component {
         var newTotal = _.sumBy(itemsCopy,(item) => {
             return item.Quantity * item.Price;
         })
-        var url = 'http://localhost:5000/orders/'
+        var url = `${herokuUrl}/orders`;
         request.put(url)
             .set('accept','json')
             .send({

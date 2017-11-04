@@ -10,6 +10,7 @@ import Nav from './components/Nav';
 import Home from './components/Home';
 import modalStyles from './utils/ModalStyles';
 
+const herokuUrl = 'https://radiant-ocean-22273.herokuapp.com'
 
 class App extends Component {
   constructor(props){
@@ -61,7 +62,7 @@ class App extends Component {
   }  
 
   getCategories(){
-    var url = 'http://localhost:5000/categories'
+    var url = `${herokuUrl}/categories`
     request.get(url)
       .set('accept','json')
       .end((err,res) => {
@@ -75,7 +76,7 @@ class App extends Component {
   }
 
   getProducts(){
-    var url = 'http://localhost:5000/products'
+    var url = `${herokuUrl}/products`
     request.get(url)
       .set('accept','json')
       .end((err,res) => {
@@ -108,7 +109,7 @@ class App extends Component {
   handleOrderSubmit(){
     
     var cartCopy = _.cloneDeep(this.state.cart);
-    var url = 'http://localhost:5000/orders';
+    var url = `${herokuUrl}/orders`;
     request
       .post(url)
       .send({
@@ -182,7 +183,7 @@ class App extends Component {
   handleNewProductSubmit(e){
     e.preventDefault();
     var newProductCopy = _.cloneDeep(this.state.newProduct);
-    var url = 'http://localhost:5000/products';
+    var url = `${herokuUrl}/products`;
     request
       .post(url)
       .send(newProductCopy)
@@ -216,7 +217,7 @@ class App extends Component {
     e.preventDefault();
     var editedProductCopy = _.cloneDeep(this.state.editedProduct);
     editedProductCopy.productId = productId; //adding productId property as it's not stored in edit state
-    var url = 'http://localhost:5000/products';
+    var url = `${herokuUrl}/products`;
     request
       .put(url)
       .send(editedProductCopy)
